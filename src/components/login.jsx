@@ -17,12 +17,39 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import axios from 'axios';
+import { Label } from "../components/ui/label"; // 상대 경로로 변경
+import { Input } from "../components/ui/input"; // 상대 경로로 변경
+import { Button } from "../components/ui/button"; // 상대 경로로 변경
 import Link from "next/link";
 
 export function Login() {
+  const [id, setid] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setError('');
+
+    try {
+      const response = await axios.post('http://3.34.42.202:3001/member/login', {
+        id,
+        password,
+      });
+      if (response.data === "test") {
+        setError("로그인 성공");
+        
+      }
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      // 로그인 성공 후 리다이렉트 또는 다른 작업 수행
+    } catch (err) {
+      setError('로그인에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen px-4"
@@ -49,30 +76,35 @@ export function Login() {
           당신을 위한 AI 식단 메이트
         </p>
       </div>
-      <div className="w-full max-w-md p-6 bg-stone-100	 rounded-lg shadow-md dark:bg-gray-800">
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="email">아이디</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="이메일 주소를 입력하세요"
-              required
-            />
+      <div className="w-full max-w-md p-6 bg-stone-100 rounded-lg shadow-md dark:bg-gray-800">
+        <form onSubmit={handleLogin}>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="id">아이디</Label>
+              <Input
+                id="id"
+                type="id"
+                value={id}
+                onChange={(e) => setid(e.target.value)}
+                placeholder="아이디를 입력하세요"
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">비밀번호</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="비밀번호를 입력하세요"
+                required
+              />
+            </div>
           </div>
-          <div>
-            <Label htmlFor="password">비밀번호</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="비밀번호를 입력하세요"
-              required
-            />
-          </div>
-        </div>
-        <Button type="submit" className="w-full mt-4">
-          로그인
-        </Button>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          <Button type="submit" className="w-full mt-4">로그인</Button>
+        </form>
         <div className="flex justify-between mt-4 text-sm text-gray-600 dark:text-gray-400">
           <Link href="#" className="hover:underline" prefetch={false}>
             아이디/비밀번호 찾기
