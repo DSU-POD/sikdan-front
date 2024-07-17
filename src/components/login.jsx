@@ -17,36 +17,35 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
-import { useState } from 'react';
-import axios from 'axios';
+import { useState } from "react";
 import { Label } from "../components/ui/label"; // 상대 경로로 변경
 import { Input } from "../components/ui/input"; // 상대 경로로 변경
 import { Button } from "../components/ui/button"; // 상대 경로로 변경
 import Link from "next/link";
+import { api } from "@/modules/api.module";
 
 export function Login() {
-  const [id, setid] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [id, setid] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const response = await axios.post('http://3.34.42.202:3001/member/login', {
+      const response = await api.post("/member/login", {
         id,
         password,
       });
       if (response.data === "test") {
         setError("로그인 성공");
-        
       }
       const { token } = response.data;
-      localStorage.setItem('token', token);
+      localStorage.setItem("token", token);
       // 로그인 성공 후 리다이렉트 또는 다른 작업 수행
     } catch (err) {
-      setError('로그인에 실패했습니다. 다시 시도해주세요.');
+      setError("로그인에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -102,8 +101,10 @@ export function Login() {
               />
             </div>
           </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <Button type="submit" className="w-full mt-4">로그인</Button>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <Button type="submit" className="w-full mt-4 border border-black">
+            로그인
+          </Button>
         </form>
         <div className="flex justify-between mt-4 text-sm text-gray-600 dark:text-gray-400">
           <Link href="#" className="hover:underline" prefetch={false}>
