@@ -23,6 +23,7 @@ import { Input } from "../components/ui/input"; // 상대 경로로 변경
 import { Button } from "../components/ui/button"; // 상대 경로로 변경
 import Link from "next/link";
 import { api } from "@/modules/api.module";
+import { showToast } from "./layout/toast";
 
 export function Login() {
   const [id, setid] = useState("");
@@ -39,13 +40,14 @@ export function Login() {
         password,
       });
       if (response.data === "test") {
-        setError("로그인 성공");
+        showToast("로그인 성공");
       }
       const { token } = response.data;
       localStorage.setItem("token", token);
       // 로그인 성공 후 리다이렉트 또는 다른 작업 수행
     } catch (err) {
-      setError("로그인에 실패했습니다. 다시 시도해주세요.");
+      const isError = true;
+      showToast("로그인에 실패했습니다. 다시 시도해주세요.", isError);
     }
   };
 
