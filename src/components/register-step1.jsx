@@ -16,14 +16,16 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from 'axios';
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { useDispatch, useSelector } from "react-redux";
+import { setRegisterStep1Data } from "@/store/reducers/member.reducer";
 
-export function RegisterStep1() {
-  const [userid, setUserid] = useState("");
+export default function RegisterStep1Component() {
+  const [userId, setUserid] = useState("");
   const [isidavailable, setIsidavailable] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
@@ -32,13 +34,48 @@ export function RegisterStep1() {
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
   const [showempty, setShowempty] = useState(false);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.memberReducer);
+
+  useEffect(() => {
+    console.log(data)
+    const { userId, nickname, email, type } = data.registerStep1;
+    setUserid(userId);
+    setNickname(nickname);
+    setEmail(email);
+    setType(type);
+  }, [data])
+
+  const handleUserId = (e) => {
+    setUserid(e.target.value)
+    
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value)
+  };
+
+
+  const handleNickname = (e) => {
+    setNickname(e.target.value)
+  };
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value)
+  };
+
+  const handleType = (type) => {
+    setType(type)
+  };
+
+
 
   //아이디 중복 검사
   const checkUseridavailability = async () => {
     try { 
       const response = await axios.get('http://3.34.42.202:3001/check-userid', {
         params: {
-          userid: userid
+          userid: userId
         }
       });
       if (response.data.available) {
@@ -73,7 +110,7 @@ export function RegisterStep1() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if(!userid || !password || !confirmpassword || !nickname || !email || !type){
+    if(!userId || !password || !confirmpassword || !nickname || !email || !type){
       setShowempty(true);
       return;
     }
@@ -84,6 +121,13 @@ export function RegisterStep1() {
     } else {
       alert('비밀번호가 일치하지 않습니다.');
     }
+    dispatch(setRegisterStep1Data({
+      userId,
+      password,
+      nickname,
+      email,
+      type
+    }))
   };
 
   return (
@@ -94,15 +138,15 @@ export function RegisterStep1() {
           <div className="space-y-2">
             <Label htmlFor="userid">아이디</Label>
             <div className="flex gap-2">
-              <Input 
+              <Input
               id="userid" 
               type="text"
-              value={userid} 
+              value={userId} 
               placeholder="사용하실 아이디를 입력해주세요."
-              onChange={(e) => setUserid(e.target.value)}
+              onChange={(e) => handleUserId(e)}
               required
                />
-              <Button variant="outline" onClick={checkUseridavailability}>중복체크</Button>
+              <Button variant="outline" onClick={checkUseridavailability}>중복검사</Button>
             </div>
             {!isidavailable && <p className="text-red-500">이미 사용 중인 아이디입니다.</p>}
           </div>
@@ -113,7 +157,7 @@ export function RegisterStep1() {
              type="password"
              value={password}
              placeholder="비밀번호를 입력해주세요"
-             onChange={(e) => setPassword(e.target.value)}
+             onChange={(e) => handlePassword(e)}
              required
              />
           </div>
@@ -136,7 +180,7 @@ export function RegisterStep1() {
               type="text"
               value={nickname}
               placeholder="닉네임을 입력해주세요."
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e) => handleNickname(e)}
               required
                />
               <Button variant="outline" onClick = {checkNicknameavailability}>중복검사</Button>
@@ -150,19 +194,19 @@ export function RegisterStep1() {
             type="text" 
             value={email}
             placeholder="이메일을 입력해주세요."
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleEmail(e)}
             required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="choose-expert">전문가</Label>
               <div className="flex justify-between gap-2">
                 <Button variant="outline" className={`w-1/2 ${type === "expert" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                  setType("expert");
+                  handleType("expert");
                 }}>
                   전문가
                 </Button>
                 <Button variant="outline" className={`w-1/2 ${type === "people" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                  setType("people");
+                  handleType("people");
                 }}> 
                   일반인
                 </Button>

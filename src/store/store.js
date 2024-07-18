@@ -4,8 +4,9 @@ import storage from "redux-persist/lib/storage";
 import { configureStore } from "@reduxjs/toolkit";
 import memberReducer from "./reducers/member.reducer";
 
+console.log("reducer",memberReducer)
 const rootReducer = combineReducers({
-  memberReducer,
+  memberReducer: memberReducer,
 });
 
 const persistConfig = {
@@ -21,6 +22,7 @@ let store;
 const initializeStore = () => {
   const store = configureStore({
     reducer: rootPersistReducer,
+    devTools: true,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: false,

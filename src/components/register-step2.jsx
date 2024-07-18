@@ -24,18 +24,36 @@ To read more about using these font, please visit the Next.js documentation:
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
 
-import { useState } from "react";
-import axios from 'axios';
+import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress"
 import { CardTitle, Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useDispatch, useSelector } from "react-redux";
+import { setRegisterStep2Data } from "@/store/reducers/member.reducer";
 
-export function RegisterStep2() {
+export default function RegisterStep2Component() {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [showempty, setShowempty] = useState(false);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.memberReducer);
+
+  useEffect(() => {
+    console.log(data)
+    const { gender, age } = data.registerStep2;
+    setGender(gender);
+    setAge(age);
+  }, [data])
+
+  const handleGender = (gender) => {
+    setGender(gender)
+  };
+
+  const handleAge = (e) => {
+    setAge(e.target.value)
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,11 +62,16 @@ export function RegisterStep2() {
       setShowempty(true);
       return;
     }
+
+    dispatch(setRegisterStep2Data({
+      gender,
+      age
+    }))
   };
 
 
   return (
-    (<div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen">
       <div className="flex flex-col items-center justify-center px-4 py-8">
         <Progress value={30} className="w-full mb-8" />
         <CardTitle className="mb-8">성별과 나이를 알려주세요</CardTitle>
@@ -59,12 +82,12 @@ export function RegisterStep2() {
                 <Label htmlFor="gender">성별</Label>
                 <div className="flex justify-between gap-2">
                  <Button variant="outline" className={`w-1/2 ${gender === "man" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                     setGender("man");
+                     handleGender("man");
                   }}>
                     남성
                   </Button>
                   <Button variant="outline" className={`w-1/2 ${gender === "woman" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                     setGender("woman");
+                     handleGender("woman");
                   }}>
                     여성
                   </Button>
@@ -78,7 +101,7 @@ export function RegisterStep2() {
                 value={age}
                 min="0" max="120" 
                 placeholder="만 나이를 입력해주세요."
-                onChange={(e) => setAge(e.target.value)}
+                onChange={(e) => handleAge(e)}
                 required />
               </div>
             </div>
@@ -98,6 +121,7 @@ export function RegisterStep2() {
         </Card>
       </div>
       {showempty && <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>}
-    </div>)
-  );
+    </div>
+    )
+  
 }

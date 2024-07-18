@@ -26,10 +26,25 @@ To read more about using these font, please visit the Next.js documentation:
 import { Progress } from "@/components/ui/progress"
 import { CardTitle, Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { setRegisterStep4Data } from "@/store/reducers/member.reducer";
 
-export function RegisterStep4() {
+export default function RegisterStep4Component() {
   const [goal, setGoal] = useState("");
   const [showempty, setShowempty] = useState(false);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.memberReducer);
+
+  useEffect(() => {
+    console.log(data)
+    const { goal } = data.registerStep4;
+    setGoal(goal);
+  }, [data])
+
+  const handleGoal = (goal) => {
+    setGoal(goal)
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,6 +53,10 @@ export function RegisterStep4() {
       setShowempty(true);
       return;
     }
+
+    dispatch(setRegisterStep4Data({
+      goal
+    }))
   };
 
   return (
@@ -48,28 +67,28 @@ export function RegisterStep4() {
         <Card className="w-full">
           <CardContent className="grid gap-6">
             <div className="grid gap-6">
-              <Button variant="outline" className={`w-1/2 ${goal === "man" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                     setGoal("weightdecrease");
+              <Button variant="outline" className={`w-1/2 ${goal === "weightdecrease" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
+                     handleGoal("weightdecrease");
                   }}>
                 체중 감소
               </Button>
-              <Button variant="outline" className={`w-1/2 ${goal === "man" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                     setGoal("weightkeep");
+              <Button variant="outline" className={`w-1/2 ${goal === "weightkeep" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
+                     handleGoal("weightkeep");
                   }}>
                 체중 유지
               </Button>
-              <Button variant="outline" className={`w-1/2 ${goal === "man" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                     setGoal("weightincrease");
+              <Button variant="outline" className={`w-1/2 ${goal === "weightincrease" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
+                     handleGoal("weightincrease");
                   }}>
                 체중 증가
               </Button>
-              <Button variant="outline"className={`w-1/2 ${goal === "man" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                     setGoal("healthkeep");
+              <Button variant="outline"className={`w-1/2 ${goal === "healthkeep" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
+                     handleGoal("healthkeep");
                   }}>
                 건강 유지
               </Button>
-              <Button variant="outline" className={`w-1/2 ${goal === "man" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                     setGoal("others");
+              <Button variant="outline" className={`w-1/2 ${goal === "others" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
+                     handleGoal("others");
                   }}>
                 그 외 기타
               </Button>
@@ -89,7 +108,7 @@ export function RegisterStep4() {
           </CardFooter>
         </Card>
       </div>
-      {showEmpty && <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>}
+      {showempty && <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>}
     </div>)
   );
 }

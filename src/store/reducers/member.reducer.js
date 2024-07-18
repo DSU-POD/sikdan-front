@@ -24,20 +24,25 @@ const memberReducer = createSlice({
   },
   reducers: {
     setRegisterStep1Data: (state, action) => {
-      state.registerStep1.userId = action.userId;
-      state.registerStep1.password = action.password;
-      state.registerStep1.nickname = action.nickname;
-      state.registerStep1.email = action.email;
-      state.registerStep1.type = action.type;
+      console.log(action.payload)
+      state.registerStep1.userId = action.payload.userId;
+      state.registerStep1.password = action.payload.password;
+      state.registerStep1.nickname = action.payload.nickname;
+      state.registerStep1.email = action.payload.email;
+      state.registerStep1.type = action.payload.type;
     },
     setRegisterStep2Data: (state, action) => {
-      state.registerStep2.gender = action.gender;
-      state.registerStep2.age = action.age;
+      state.registerStep2.gender = action.payload.gender;
+      state.registerStep2.age = action.payload.age;
     },
     setRegisterStep3Data: (state, action) => {
-      state.registerStep3.height = 0;
-      state.registerStep3.weight = 0;
+      state.registerStep3.height = action.payload.height;
+      state.registerStep3.weight = action.payload.weight;
     },
+    setRegisterStep4Data: (state, action) => {
+      console.log(action.payload.goal)
+      state.registerStep4.goal = action.payload.goal;
+    }
   },
 });
 
@@ -45,5 +50,6 @@ export const {
   setRegisterStep1Data,
   setRegisterStep2Data,
   setRegisterStep3Data,
+  setRegisterStep4Data
 } = memberReducer.actions;
-export default memberReducer.reducers;
+export default memberReducer.reducer;

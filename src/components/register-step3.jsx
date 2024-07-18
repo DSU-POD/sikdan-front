@@ -28,11 +28,31 @@ import { CardTitle, Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { setRegisterStep3Data } from "@/store/reducers/member.reducer"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect, useState } from "react"
 
-export function RegisterStep3() {
+export default function RegisterStep3Component() {
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [showempty, setShowempty] = useState(false);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.memberReducer);
+
+  useEffect(() => {
+    const { height, weight } = data.registerStep3;
+
+    setHeight(height);
+    setWeight(weight);
+  }, [data])
+
+  const handleHeight = (e) => {
+    setHeight(e.target.value)
+  };
+
+  const handleWeight = (e) => {
+    setWeight(e.target.value)
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,6 +61,10 @@ export function RegisterStep3() {
       setShowempty(true);
       return;
     }
+    dispatch(setRegisterStep3Data({
+      height,
+      weight
+    }))
   };
   return (
     (<div className="flex flex-col h-screen">
@@ -56,10 +80,10 @@ export function RegisterStep3() {
                   <Input 
                   id="height" 
                   type="number" 
-                  value={height}
+                 // value={height}
                   min="0" max="400" 
                   placeholder="키를 입력해주세요."
-                  onChange={(e) => setHeight(e.target.value)}
+                  onChange={(e) => handleHeight(e)}
                   required />
                   <span className="text-gray-500">cm</span>
                 </div>
@@ -72,7 +96,7 @@ export function RegisterStep3() {
                   type="number"
                    min="0" max="300" 
                    placeholder="몸무게를 입력해주세요."
-                   onChange={(e) => setWeight(e.target.value)}
+                   onChange={(e) => handleWeight(e)}
                    required />
                   <span className="text-gray-500">kg</span>
                 </div>
