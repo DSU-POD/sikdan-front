@@ -29,12 +29,15 @@ import { Button } from "@/components/ui/button"
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { setRegisterStep4Data } from "@/store/reducers/member.reducer";
+import { useRouter } from "next/router";
 
 export default function RegisterStep4Component() {
   const [goal, setGoal] = useState("");
   const [showempty, setShowempty] = useState(false);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
+  const router = useRouter();
+
 
   useEffect(() => {
     console.log(data)
@@ -45,6 +48,13 @@ export default function RegisterStep4Component() {
   const handleGoal = (goal) => {
     setGoal(goal)
   };
+
+  const handleSubmit2 = (e) => {
+    e.preventDefault();
+
+    router.push('/member/register/step3'); // Navigate to /member/register/step3
+  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -99,7 +109,7 @@ export default function RegisterStep4Component() {
       <div className="mt-auto border-0">
         <Card className="w-full border-0">
           <CardFooter className="flex justify-between gap-4">
-            <Button variant="outline" className="w-1/2">
+            <Button variant="outline" className="w-1/2"onClick={handleSubmit2}>
               이전
             </Button>
             <Button type="submit" className="w-1/2" onClick={handleSubmit}>

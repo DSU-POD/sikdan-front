@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button"
 import { setRegisterStep3Data } from "@/store/reducers/member.reducer"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/router";
 
 export default function RegisterStep3Component() {
   const [height, setHeight] = useState("");
@@ -38,6 +39,7 @@ export default function RegisterStep3Component() {
   const [showempty, setShowempty] = useState(false);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
+  const router = useRouter();
 
   useEffect(() => {
     const { height, weight } = data.registerStep3;
@@ -54,6 +56,12 @@ export default function RegisterStep3Component() {
     setWeight(e.target.value)
   };
 
+  const handleSubmit2 = (e) => {
+    e.preventDefault();
+
+    router.push('/member/register/step2'); // Navigate to /member/register/step2
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -65,6 +73,7 @@ export default function RegisterStep3Component() {
       height,
       weight
     }))
+    router.push('/member/register/step4'); // Navigate to /member/register/step4
   };
   return (
     (<div className="flex flex-col h-screen">
@@ -108,7 +117,7 @@ export default function RegisterStep3Component() {
       <div className="mt-auto border-0">
         <Card className="w-full border-0">
           <CardFooter className="flex justify-between gap-2">
-            <Button variant="outline" className="w-1/2">
+            <Button variant="outline" className="w-1/2"onClick={handleSubmit2}>
               이전
             </Button>
             <Button type="submit" className="w-1/2" onClick={handleSubmit}>

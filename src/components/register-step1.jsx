@@ -18,11 +18,12 @@ To read more about using these font, please visit the Next.js documentation:
 **/
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStep1Data } from "@/store/reducers/member.reducer";
+import { useRouter } from "next/router";
 
 export default function RegisterStep1Component() {
   const [userId, setUserid] = useState("");
@@ -36,102 +37,99 @@ export default function RegisterStep1Component() {
   const [showempty, setShowempty] = useState(false);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
+  const router = useRouter();
 
   useEffect(() => {
-    console.log(data)
+    console.log(data);
     const { userId, nickname, email, type } = data.registerStep1;
     setUserid(userId);
     setNickname(nickname);
     setEmail(email);
     setType(type);
-  }, [data])
+  }, [data]);
 
   const handleUserId = (e) => {
-    setUserid(e.target.value)
-    
+    setUserid(e.target.value);
   };
 
   const handlePassword = (e) => {
-    setPassword(e.target.value)
+    setPassword(e.target.value);
   };
 
-
   const handleNickname = (e) => {
-    setNickname(e.target.value)
+    setNickname(e.target.value);
   };
 
   const handleEmail = (e) => {
-    setEmail(e.target.value)
+    setEmail(e.target.value);
   };
 
   const handleType = (type) => {
-    setType(type)
+    setType(type);
   };
 
-
-
-  //아이디 중복 검사
+  // 아이디 중복 검사
   const checkUseridavailability = async () => {
-    try { 
+    try {
       const response = await axios.get('http://3.34.42.202:3001/check-userid', {
         params: {
-          userid: userId
-        }
+          userid: userId,
+        },
       });
       if (response.data.available) {
         setIsidavailable(true);
       } else {
         setIsidavailable(false);
       }
-   } catch (error) {
-    console.error('아이디 중복 검사 에러:', error);
-   }
+    } catch (error) {
+      console.error('아이디 중복 검사 에러:', error);
+    }
   };
 
-  //닉네임 중복 검사
+  // 닉네임 중복 검사
   const checkNicknameavailability = async () => {
-    try { 
+    try {
       const response = await axios.get('http://3.34.42.202:3001/check-nickname', {
         params: {
-          userid: userid
-        }
+          nickname: nickname, // Changed from 'userid' to 'nickname'
+        },
       });
       if (response.data.available) {
         setIsnicknameavailable(true);
       } else {
         setIsnicknameavailable(false);
       }
-   } catch (error) {
-    console.error('아이디 중복 검사 에러:', error);
-   }
+    } catch (error) {
+      console.error('닉네임 중복 검사 에러:', error);
+    }
   };
- 
-  //비밀번호 재확인 
+
+  // 비밀번호 재확인
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if(!userId || !password || !confirmpassword || !nickname || !email || !type){
+    if (!userId || !password || !confirmpassword || !nickname || !email || !type) {
       setShowempty(true);
       return;
     }
 
-
     if (password === confirmpassword) {
       alert('비밀번호가 일치합니다.');
+      dispatch(setRegisterStep1Data({
+        userId,
+        password,
+        nickname,
+        email,
+        type,
+      }));
+      router.push('/member/register/step2'); // Navigate to /member/register/step2
     } else {
       alert('비밀번호가 일치하지 않습니다.');
     }
-    dispatch(setRegisterStep1Data({
-      userId,
-      password,
-      nickname,
-      email,
-      type
-    }))
   };
 
   return (
-    (<div className="flex justify-center items-center h-screen px-4">
+    <div className="flex justify-center items-center h-screen px-4">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center" />
         <div className="space-y-4">
@@ -139,13 +137,13 @@ export default function RegisterStep1Component() {
             <Label htmlFor="userid">아이디</Label>
             <div className="flex gap-2">
               <Input
-              id="userid" 
-              type="text"
-              value={userId} 
-              placeholder="사용하실 아이디를 입력해주세요."
-              onChange={(e) => handleUserId(e)}
-              required
-               />
+                id="userid"
+                type="text"
+                value={userId}
+                placeholder="사용하실 아이디를 입력해주세요."
+                onChange={(e) => handleUserId(e)}
+                required
+              />
               <Button variant="outline" onClick={checkUseridavailability}>중복검사</Button>
             </div>
             {!isidavailable && <p className="text-red-500">이미 사용 중인 아이디입니다.</p>}
@@ -153,71 +151,76 @@ export default function RegisterStep1Component() {
           <div className="space-y-2">
             <Label htmlFor="password">비밀번호</Label>
             <Input
-             id="password" 
-             type="password"
-             value={password}
-             placeholder="비밀번호를 입력해주세요"
-             onChange={(e) => handlePassword(e)}
-             required
-             />
+              id="password"
+              type="password"
+              value={password}
+              placeholder="비밀번호를 입력해주세요"
+              onChange={(e) => handlePassword(e)}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirmpassword">비밀번호 확인</Label>
-            <Input 
-            id="confirmpassword" 
-            type="password"
-            value={confirmpassword}
-            placeholder="비밀번호를 한번 더 입력해주세요"
-            onChange={(e) => setConfirmpassword(e.target.value)}
-            required
-             />
+            <Input
+              id="confirmpassword"
+              type="password"
+              value={confirmpassword}
+              placeholder="비밀번호를 한번 더 입력해주세요"
+              onChange={(e) => setConfirmpassword(e.target.value)}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="nickname">닉네임</Label>
             <div className="flex gap-2">
-              <Input 
-              id="nickname" 
-              type="text"
-              value={nickname}
-              placeholder="닉네임을 입력해주세요."
-              onChange={(e) => handleNickname(e)}
-              required
-               />
-              <Button variant="outline" onClick = {checkNicknameavailability}>중복검사</Button>
+              <Input
+                id="nickname"
+                type="text"
+                value={nickname}
+                placeholder="닉네임을 입력해주세요."
+                onChange={(e) => handleNickname(e)}
+                required
+              />
+              <Button variant="outline" onClick={checkNicknameavailability}>중복검사</Button>
             </div>
             {!isnicknameavailable && <p className="text-red-500">이미 사용 중인 닉네임입니다.</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">이메일</Label>
-            <Input 
-            id="email" 
-            type="text" 
-            value={email}
-            placeholder="이메일을 입력해주세요."
-            onChange={(e) => handleEmail(e)}
-            required />
+            <Input
+              id="email"
+              type="text"
+              value={email}
+              placeholder="이메일을 입력해주세요."
+              onChange={(e) => handleEmail(e)}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="choose-expert">전문가</Label>
-              <div className="flex justify-between gap-2">
-                <Button variant="outline" className={`w-1/2 ${type === "expert" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                  handleType("expert");
-                }}>
-                  전문가
-                </Button>
-                <Button variant="outline" className={`w-1/2 ${type === "people" ? 'bg-black text-white' : 'bg-white' }`} onClick={(e) => {
-                  handleType("people");
-                }}> 
-                  일반인
-                </Button>
-              </div>
-          </div> 
+            <div className="flex justify-between gap-2">
+              <Button
+                variant="outline"
+                className={`w-1/2 ${type === "expert" ? 'bg-black text-white' : 'bg-white'}`}
+                onClick={() => handleType("expert")}
+              >
+                전문가
+              </Button>
+              <Button
+                variant="outline"
+                className={`w-1/2 ${type === "people" ? 'bg-black text-white' : 'bg-white'}`}
+                onClick={() => handleType("people")}
+              >
+                일반인
+              </Button>
+            </div>
+          </div>
         </div>
         <Button type="submit" className="w-full" onClick={handleSubmit}>
           다음
         </Button>
       </div>
       {showempty && <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>}
-    </div>)
+    </div>
   );
 }

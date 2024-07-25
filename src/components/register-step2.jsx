@@ -32,6 +32,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStep2Data } from "@/store/reducers/member.reducer";
+import { useRouter } from "next/router";
 
 export default function RegisterStep2Component() {
   const [gender, setGender] = useState("");
@@ -39,6 +40,7 @@ export default function RegisterStep2Component() {
   const [showempty, setShowempty] = useState(false);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
+  const router = useRouter();
 
   useEffect(() => {
     console.log(data)
@@ -55,6 +57,12 @@ export default function RegisterStep2Component() {
     setAge(e.target.value)
   };
 
+  const handleSubmit2 = (e) => {
+    e.preventDefault();
+
+    router.push('/member/register/step1'); // Navigate to /member/register/step1
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -67,6 +75,7 @@ export default function RegisterStep2Component() {
       gender,
       age
     }))
+    router.push('/member/register/step3'); // Navigate to /member/register/step3
   };
 
 
@@ -111,7 +120,7 @@ export default function RegisterStep2Component() {
       <div className="mt-auto border-0">
         <Card className="w-full border-0">
           <CardFooter className="flex justify-between gap-2">
-            <Button variant="outline" className="w-1/2">
+            <Button variant="outline" className="w-1/2" onClick={handleSubmit2}>
               이전
             </Button>
             <Button type="submit" className="w-1/2" onClick={handleSubmit}>
