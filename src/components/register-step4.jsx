@@ -67,6 +67,7 @@ export default function RegisterStep4Component() {
     dispatch(setRegisterStep4Data({
       goal
     }))
+    router.push('/member/register/login'); // Navigate to /member/login
   };
 
   return (

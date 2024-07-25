@@ -25,8 +25,8 @@ import Link from "next/link";
 import { api } from "@/modules/api.module";
 import { showToast } from "./layout/toast";
 
-export function Login() {
-  const [id, setid] = useState("");
+export function LoginComponent() {
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -36,7 +36,7 @@ export function Login() {
 
     try {
       const response = await api.post("/member/login", {
-        id,
+        userId,
         password,
       });
       if (response.data === "test") {
@@ -60,7 +60,7 @@ export function Login() {
         <img
           src="/placeholder.svg"
           alt="MealMate Logo"
-          width={60}
+          wuserIdth={60}
           height={60}
           className="mb-2"
         />
@@ -81,12 +81,12 @@ export function Login() {
         <form onSubmit={handleLogin}>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="id">아이디</Label>
+              <Label htmlFor="userId">아이디</Label>
               <Input
-                id="id"
-                type="id"
-                value={id}
-                onChange={(e) => setid(e.target.value)}
+                userId="userId"
+                type="userId"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
                 placeholder="아이디를 입력하세요"
                 required
               />
@@ -94,7 +94,7 @@ export function Login() {
             <div>
               <Label htmlFor="password">비밀번호</Label>
               <Input
-                id="password"
+                userId="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
