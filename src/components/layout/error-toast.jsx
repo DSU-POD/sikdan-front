@@ -25,7 +25,7 @@ export default function ErrorToast({ message, setToast }) {
         <span className="sr-only">Warning icon</span>
       </div>
       <div className="ms-3 text-sm font-normal">
-        Improve password difficulty.
+        {message}
       </div>
       <button
         type="button"

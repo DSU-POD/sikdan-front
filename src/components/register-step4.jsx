@@ -30,6 +30,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { setRegisterStep4Data } from "@/store/reducers/member.reducer";
 import { useRouter } from "next/router";
+import { showToast } from "./layout/toast";
+import { api } from "@/modules/api.module";
 
 export default function RegisterStep4Component() {
   const [goal, setGoal] = useState("");
@@ -37,6 +39,10 @@ export default function RegisterStep4Component() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
   const router = useRouter();
+
+  const registerStep1 = useSelector((state) => state.memberReducer.registerStep1);
+  const registerStep2 = useSelector((state) => state.memberReducer.registerStep2);
+  const registerStep3 = useSelector((state) => state.memberReducer.registerStep3);
 
   useEffect(() => {
     console.log(data);
@@ -54,7 +60,7 @@ export default function RegisterStep4Component() {
     router.push("/member/register/step3"); // Navigate to /member/register/step3
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     if (!goal) {
@@ -67,7 +73,27 @@ export default function RegisterStep4Component() {
         goal,
       })
     );
-    router.push("/member/register/login"); // Navigate to /member/login
+    
+    const registrationData = { 
+      registerStep1,
+      registerStep2,
+      registerStep3,
+      goal
+    };
+
+    try{
+      const response = await api.post("/member/register/complete",registrationData); 
+      if (response.data === "success"){
+        showToast("회원가입이 성공하였습니다.");
+        router.push("/member/register/login");
+      }
+      const { token } = response.data;
+      localStorage.setItem("token", token);
+    } catch(err) {
+      const isError = true;
+      console.log(err)
+      showToast("회원가입에 실패했습니다. 다시 시도해주세요.", isError);
+    }
   };
 
   return (
