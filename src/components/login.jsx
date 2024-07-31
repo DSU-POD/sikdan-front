@@ -52,10 +52,7 @@ export function LoginComponent() {
   };
 
   return (
-    <div
-      className="flex flex-col items-center justify-center min-h-screen px-4"
-      style={{ backgroundColor: "#72a555" }}
-    >
+    <div>
       <div className="flex flex-col items-center mb-8">
         <img
           src="/placeholder.svg"
