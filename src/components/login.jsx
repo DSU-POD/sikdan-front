@@ -63,13 +63,13 @@ export function LoginComponent() {
         />
         <h1
           style={{ color: "white" }}
-          className="text-2xl font-bold text-white-800 dark:text-white-200"
+          className="text-2xl font-bold text-Black-800 dark:text-white-200"
         >
           MealMate
         </h1>
         <p
           style={{ color: "white" }}
-          className="text-sm text-white-600 dark:text-white-400"
+          className="text-sm text-Black-600 dark:text-white-400"
         >
           당신을 위한 AI 식단 메이트
         </p>
@@ -101,7 +101,7 @@ export function LoginComponent() {
             </div>
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <Button type="submit" className="w-full mt-4 border border-black">
+          <Button type="submit" className="w-full mt-4 border border-black" onClick={handleLogin}>
             로그인
           </Button>
         </form>

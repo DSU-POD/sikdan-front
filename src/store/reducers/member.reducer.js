@@ -21,6 +21,11 @@ const memberReducer = createSlice({
     registerStep4: {
       goal: "",
     },
+    login: {
+      isLogin : false,
+      userId : "",
+
+    }
   },
   reducers: {
     setRegisterStep1Data: (state, action) => {
@@ -42,6 +47,10 @@ const memberReducer = createSlice({
     setRegisterStep4Data: (state, action) => {
       console.log(action.payload.goal)
       state.registerStep4.goal = action.payload.goal;
+    },
+    setloginData: (state, action) => {
+      state.login.isLogin = action.payload.isLogin;
+      state.login.userId = action.payload.userId;
     }
   },
 });
@@ -50,6 +59,7 @@ export const {
   setRegisterStep1Data,
   setRegisterStep2Data,
   setRegisterStep3Data,
-  setRegisterStep4Data
+  setRegisterStep4Data,
+  setloginData
 } = memberReducer.actions;
 export default memberReducer.reducer;
