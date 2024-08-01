@@ -139,14 +139,14 @@ export default function RegisterStep2Component() {
           <CardFooter className="flex justify-between gap-2">
             <Button
               variant="outline"
-              className="w-full border-0 bg-black text-white"
+              className="w-full border-0"
               onClick={handleSubmit2}
             >
               이전
             </Button>
             <Button
               type="submit"
-              className="w-full border"
+              className="w-full border bg-black text-white"
               onClick={handleSubmit}
             >
               다음

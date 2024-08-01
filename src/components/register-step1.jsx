@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStep1Data } from "@/store/reducers/member.reducer";
 import { useRouter } from "next/router";
+import { showToast } from "./layout/toast";
 
 export default function RegisterStep1Component() {
   const [userId, setUserid] = useState("");
@@ -124,7 +125,6 @@ export default function RegisterStep1Component() {
     }
 
     if (password === confirmpassword) {
-      alert("비밀번호가 일치합니다.");
       dispatch(
         setRegisterStep1Data({
           userId,
@@ -136,7 +136,8 @@ export default function RegisterStep1Component() {
       );
       router.push("/member/register/step2"); // Navigate to /member/register/step2
     } else {
-      alert("비밀번호가 일치하지 않습니다.");
+      const isError = true;
+      showToast("비밀번호가 일치하지 않습니다.", isError);
     }
   };
 

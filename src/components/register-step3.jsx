@@ -128,14 +128,14 @@ export default function RegisterStep3Component() {
           <CardFooter className="flex justify-between gap-2">
             <Button
               variant="outline"
-              className="w-full bg-black text-white shadow"
+              className="w-full border shadow"
               onClick={handleSubmit2}
             >
               이전
             </Button>
             <Button
               type="submit"
-              className="w-full border shadow"
+              className="w-full bg-black text-white shadow"
               onClick={handleSubmit}
             >
               다음
