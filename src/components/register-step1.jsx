@@ -228,7 +228,7 @@ export default function RegisterStep1Component() {
               <Button
                 variant="outline"
                 className={`w-1/2 ${
-                  type === "expert" ? "bg-black text-white" : "bg-white"
+                  trainer_yn === "expert" ? "bg-black text-white" : "bg-white"
                 }`}
                 onClick={() => handleTrainer_yn("expert")}
               >
@@ -237,7 +237,7 @@ export default function RegisterStep1Component() {
               <Button
                 variant="outline"
                 className={`w-1/2 ${
-                  type === "people" ? "bg-black text-white" : "bg-white"
+                  trainer_yn === "people" ? "bg-black text-white" : "bg-white"
                 }`}
                 onClick={() => handleTrainer_yn("people")}
               >
