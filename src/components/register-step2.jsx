@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStep2Data } from "@/store/reducers/member.reducer";
 import { useRouter } from "next/router";
+import { showToast } from "./layout/toast";
 
 export default function RegisterStep2Component() {
   const [gender, setGender] = useState("");
@@ -67,7 +68,7 @@ export default function RegisterStep2Component() {
     e.preventDefault();
 
     if (!gender || !age) {
-      setShowempty(true);
+      showToast("모든 항목을 입력해주세요.")
       return;
     }
 
@@ -154,9 +155,6 @@ export default function RegisterStep2Component() {
           </CardFooter>
         </Card>
       </div>
-      {showempty && (
-        <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>
-      )}
     </>
   );
 }

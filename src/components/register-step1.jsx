@@ -34,7 +34,7 @@ export default function RegisterStep1Component() {
   const [nickname, setNickname] = useState("");
   const [isnicknameavailable, setIsnicknameavailable] = useState(true);
   const [email, setEmail] = useState("");
-  const [type, setType] = useState("");
+  const [trainer_yn, setTrainer_yn] = useState("");
   const [showempty, setShowempty] = useState(false);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
@@ -42,11 +42,11 @@ export default function RegisterStep1Component() {
 
   useEffect(() => {
     console.log(data);
-    const { userId, nickname, email, type } = data.registerStep1;
+    const { userId, nickname, email, trainer_yn } = data.registerStep1;
     setUserid(userId);
     setNickname(nickname);
     setEmail(email);
-    setType(type);
+    setTrainer_yn(trainer_yn);
   }, [data]);
 
   const handleUserId = (e) => {
@@ -65,8 +65,8 @@ export default function RegisterStep1Component() {
     setEmail(e.target.value);
   };
 
-  const handleType = (type) => {
-    setType(type);
+  const handleTrainer_yn = (type) => {
+    setTrainer_yn(type);
   };
 
   // 아이디 중복 검사
@@ -118,9 +118,9 @@ export default function RegisterStep1Component() {
       !confirmpassword ||
       !nickname ||
       !email ||
-      !type
+      !trainer_yn
     ) {
-      setShowempty(true);
+      showToast("모든 항목을 입력해주세요.")
       return;
     }
 
@@ -131,7 +131,7 @@ export default function RegisterStep1Component() {
           password,
           nickname,
           email,
-          type,
+          trainer_yn,
         })
       );
       router.push("/member/register/step2"); // Navigate to /member/register/step2
@@ -228,18 +228,18 @@ export default function RegisterStep1Component() {
               <Button
                 variant="outline"
                 className={`w-1/2 ${
-                  type === "expert" ? "bg-black text-white" : "bg-white"
+                  trainer_yn === "expert" ? "bg-black text-white" : "bg-white"
                 }`}
-                onClick={() => handleType("expert")}
+                onClick={() => handleTrainer_yn("expert")}
               >
                 전문가
               </Button>
               <Button
                 variant="outline"
                 className={`w-1/2 ${
-                  type === "people" ? "bg-black text-white" : "bg-white"
+                  trainer_yn === "people" ? "bg-black text-white" : "bg-white"
                 }`}
-                onClick={() => handleType("people")}
+                onClick={() => handleTrainer_yn("people")}
               >
                 일반인
               </Button>
@@ -254,9 +254,6 @@ export default function RegisterStep1Component() {
           다음
         </Button>
       </div>
-      {showempty && (
-        <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>
-      )}
     </>
   );
 }

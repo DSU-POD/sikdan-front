@@ -74,21 +74,25 @@ export default function RegisterStep4Component() {
       })
     );
 
-    const { userID, password, nickname, email, type } = registerStep1; 
+    showToast("모든 항목을 입력해주세요.")
+
+    const { userId, password, nickname, email, trainer_yn } = registerStep1; 
     const { gender, age } = registerStep2;
     const { height, weight } = registerStep3; 
     
-    const registrationData = { 
-      userID,
-      password,
-      nickname,
-      email,
-      type,
-      gender,
-      age,
-      height,
-      weight,
-      goal
+    const registrationData = {
+      registerData: {
+        userId,
+        password,
+        nickname,
+        email,
+        trainer_yn,
+        gender,
+        age,
+        height,
+        weight,
+        goal
+      }
     };
 
     try{
@@ -97,7 +101,7 @@ export default function RegisterStep4Component() {
         showToast("회원가입이 성공하였습니다.");
         router.push("/member/register/login");
       }
-      const { token } = response.data;
+      const token  = response.data;
       localStorage.setItem("token", token);
     } catch(err) {
       const isError = true;
@@ -200,9 +204,6 @@ export default function RegisterStep4Component() {
           </CardFooter>
         </Card>
       </div>
-      {showempty && (
-        <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>
-      )}
     </>
   );
 }
