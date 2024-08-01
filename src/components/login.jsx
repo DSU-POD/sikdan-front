@@ -24,11 +24,13 @@ import { Button } from "../components/ui/button"; // 상대 경로로 변경
 import Link from "next/link";
 import { api } from "@/modules/api.module";
 import { showToast } from "./layout/toast";
+import { useRouter } from "next/router";
 
 export function LoginComponent() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -49,6 +51,13 @@ export function LoginComponent() {
       const isError = true;
       showToast("로그인에 실패했습니다. 다시 시도해주세요.", isError);
     }
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+      router.push("/member/register/step1"); // Navigate to /member/register/step1
+   
   };
 
   return (
@@ -109,7 +118,7 @@ export function LoginComponent() {
           <Link href="#" className="hover:underline" prefetch={false}>
             아이디/비밀번호 찾기
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false}>
+          <Link href="#" className="hover:underline" prefetch={false} onClick={handleRegister}>
             회원가입
           </Link>
         </div>
