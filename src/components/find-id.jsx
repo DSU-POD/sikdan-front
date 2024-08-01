@@ -41,16 +41,7 @@ export default function FindIdComponent() {
       <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">아이디 찾기</h1>
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="name">이름</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="이름을 입력해주세요"
-              onChange={(e) => setData("name", e.currentTarget.value)}
-            />
-          </div>
-          <div>
+          <div className="flex flex-col gap-4">
             <Label htmlFor="email">이메일</Label>
             <Input
               id="email"
