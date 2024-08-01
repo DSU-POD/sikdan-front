@@ -8,7 +8,7 @@ const memberReducer = createSlice({
       password: "",
       nickname: "",
       email: "",
-      type: "",
+      trainer_yn: "",
     },
     registerStep2: {
       gender: "",
@@ -34,7 +34,7 @@ const memberReducer = createSlice({
       state.registerStep1.password = action.payload.password;
       state.registerStep1.nickname = action.payload.nickname;
       state.registerStep1.email = action.payload.email;
-      state.registerStep1.type = action.payload.type;
+      state.registerStep1.trainer_yn = action.payload.trainer_yn;
     },
     setRegisterStep2Data: (state, action) => {
       state.registerStep2.gender = action.payload.gender;

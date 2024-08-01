@@ -66,7 +66,7 @@ export default function RegisterStep3Component() {
     e.preventDefault();
 
     if (!height || !weight) {
-      setShowempty(true);
+      showToast("모든 항목을 입력해주세요.")
       return;
     }
     dispatch(
@@ -143,9 +143,6 @@ export default function RegisterStep3Component() {
           </CardFooter>
         </Card>
       </div>
-      {showempty && (
-        <p className="text-red-500 text-center">모든 항목을 입력해주세요.</p>
-      )}
     </>
   );
 }

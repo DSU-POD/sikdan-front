@@ -44,7 +44,7 @@ export function LoginComponent() {
       if (response.data === "test") {
         showToast("로그인 성공");
       }
-      const { token } = response.data;
+      const token = response.data;
       localStorage.setItem("token", token);
       // 로그인 성공 후 리다이렉트 또는 다른 작업 수행
     } catch (err) {
