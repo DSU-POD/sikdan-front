@@ -7,3 +7,11 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return <Login />;
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {
+      isBeforeLogin: true,
+    },
+  };
+};

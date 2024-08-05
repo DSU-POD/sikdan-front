@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }) {
   return (
     <Provider store={storeAndPersistor.store}>
       <PersistGate loading={null} persistor={storeAndPersistor.persistor}>
-        <LayoutComponent>
+        <LayoutComponent isBeforeLogin={pageProps.isBeforeLogin}>
           <Component {...pageProps} />
         </LayoutComponent>
       </PersistGate>
