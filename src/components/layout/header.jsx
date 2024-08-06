@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { HeartIcon, HomeIcon, SearchIcon, SquarePlusIcon } from "lucide-react";
+import { Input } from "../ui/input";
 
 export default function Header() {
   return (
@@ -13,6 +14,11 @@ export default function Header() {
       >
         <span className="font-bold text-lg">MealMate</span>
       </Link>
+      <Input
+        type="text"
+        placeholder="검색하실 음식명을 입력해주세요."
+        className="flex-1 bg-[#ececec] rounded-full border-none focus:ring-0 focus:outline-none text-primary-foreground placeholder:text-muted-foreground"
+      />
       <SearchIcon />
     </header>
   );

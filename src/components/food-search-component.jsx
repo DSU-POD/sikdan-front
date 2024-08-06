@@ -1,26 +1,28 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
-export default function FoodSearchComponent() {
+export default function FoodSearchComponent({ name }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const handleSearch = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("YOUR_API_URL");
-      const data = await response.json();
-      setSearchResults([
-        {
-          id: 1, // 아이템에 고유 ID를 추가합니다.
-          calories: 300,
-          name: "test",
-          fat: 10,
-          carbs: 10,
-          protein: 10,
-        },
-      ]);
-    } catch (error) {
-      console.error(error);
+    if (name) {
+      try {
+        const response = await fetch("YOUR_API_URL");
+        const data = await response.json();
+        setSearchResults([
+          {
+            id: 1, // 아이템에 고유 ID를 추가합니다.
+            calories: 300,
+            name: "test",
+            fat: 10,
+            carbs: 10,
+            protein: 10,
+          },
+        ]);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -42,39 +44,40 @@ export default function FoodSearchComponent() {
         </form>
       </div>
       <div className="space-y-6">
-        {searchResults.map((item) => (
-          <div
-            key={item.id}
-            className="bg-white rounded-lg shadow-md overflow-hidden"
-          >
-            <div className="relative">
-              <img
-                src="/placeholder.svg"
-                alt={item.name}
-                width={300}
-                height={200}
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-1 text-xs font-medium">
-                {item.calories} kcal
-              </div>
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-bold mb-2">{item.name}</h3>
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                <div>
-                  <span className="font-medium">탄수화물</span> {item.carbs}g
-                </div>
-                <div>
-                  <span className="font-medium">단백질</span> {item.protein}g
-                </div>
-                <div>
-                  <span className="font-medium">지방</span> {item.fat}g
+        {searchResults?.length > 0 &&
+          searchResults.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden"
+            >
+              <div className="relative">
+                <img
+                  src="/placeholder.svg"
+                  alt={item.name}
+                  width={300}
+                  height={200}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-1 text-xs font-medium">
+                  {item.calories} kcal
                 </div>
               </div>
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-2">{item.name}</h3>
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  <div>
+                    <span className="font-medium">탄수화물</span> {item.carbs}g
+                  </div>
+                  <div>
+                    <span className="font-medium">단백질</span> {item.protein}g
+                  </div>
+                  <div>
+                    <span className="font-medium">지방</span> {item.fat}g
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       {searchResults.length === 0 && (
         <div className="text-center text-gray-500 py-12">
