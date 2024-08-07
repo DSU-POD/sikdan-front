@@ -1,83 +1,82 @@
-import { useState } from "react";
+// feed-component.jsx
+import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 
-export function FeedComponent() {
+export function FeedComponent({ posts }) { // posts prop 추가
   const [isCommentOpen, setIsCommentOpen] = useState(false);
+
   return (
     <div className="flex flex-col h-screen">
       <main className="flex-1 overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          <Card className="rounded-lg overflow-hidden">
-            <CardHeader className="flex items-center gap-3 p-4">
-              <div className="flex items-center gap-3">
-                <Avatar className="w-10 h-10 border">
-                  <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-0.5">
-                  <Link href="#" className="font-medium" prefetch={false}>
-                    shadcn
-                  </Link>
-                  <div className="text-gray-500 dark:text-gray-400 text-sm">
-                    3h ago
+          {posts.map((post, index) => ( // 반복문으로 posts를 렌더링
+            <Card key={index} className="rounded-lg overflow-hidden">
+              <CardHeader className="flex items-center gap-3 p-4">
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-10 h-10 border">
+                    <AvatarImage src={post.avatar} />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <div className="grid gap-0.5">
+                    <Link href="#" className="font-medium" prefetch={false}>
+                      {post.username}
+                    </Link>
+                    <div className="text-gray-500 dark:text-gray-400 text-sm">
+                      {post.timeAgo}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="p-0">
-              <img
-                src="/placeholder.svg"
-                width={600}
-                height={600}
-                alt="Post"
-                className="aspect-square object-cover"
-              />
-            </CardContent>
-            <CardFooter className="p-4 grid gap-3">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon">
-                  <ThumbsUpIcon className="w-5 h-5" />
-                  <span className="sr-only">Like</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsCommentOpen(true)}
-                >
-                  <MessageCircleIcon className="w-5 h-5" />
-                  <span className="sr-only">Comment</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <ShareIcon className="w-5 h-5" />
-                  <span className="sr-only">Share</span>
-                </Button>
-                <Button variant="ghost" size="icon" className="ml-auto">
-                  <BookmarkIcon className="w-5 h-5" />
-                  <span className="sr-only">Save</span>
-                </Button>
-              </div>
-              <div className="space-y-2">
-                <div>
-                  <Link href="#" className="font-medium" prefetch={false}>
-                    shadcn
-                  </Link>
-                  This is a sample caption for an Instagram post.
+              </CardHeader>
+              <CardContent className="p-0">
+                <img
+                  src={post.image}
+                  width={600}
+                  height={600}
+                  alt="Post"
+                  className="aspect-square object-cover"
+                />
+              </CardContent>
+              <CardFooter className="p-4 grid gap-3">
+                <div className="flex items-center gap-3">
+                  <Button variant="ghost" size="icon">
+                    <ThumbsUpIcon className="w-5 h-5" />
+                    <span className="sr-only">Like</span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsCommentOpen(true)}
+                  >
+                    <MessageCircleIcon className="w-5 h-5" />
+                    <span className="sr-only">Comment</span>
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <ShareIcon className="w-5 h-5" />
+                    <span className="sr-only">Share</span>
+                  </Button>
+                  <Button variant="ghost" size="icon" className="ml-auto">
+                    <BookmarkIcon className="w-5 h-5" />
+                    <span className="sr-only">Save</span>
+                  </Button>
                 </div>
-                <div className="text-gray-500 dark:text-gray-400 text-sm">
-                  View all 12 comments
+                <div className="space-y-2">
+                  <div>
+                    <Link href="#" className="font-medium" prefetch={false}>
+                      {post.username}
+                    </Link>
+                    {post.caption}
+                  </div>
+                  <div className="text-gray-500 dark:text-gray-400 text-sm">
+                    View all {post.commentsCount} comments
+                  </div>
                 </div>
-              </div>
-            </CardFooter>
-          </Card>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
       </main>
       {isCommentOpen && (
