@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 
 export default function FoodSearchComponent({ name }) {
@@ -25,6 +25,12 @@ export default function FoodSearchComponent({ name }) {
       }
     }
   };
+
+  useEffect(() => {
+    if (name) {
+      setSearchTerm(name);
+    }
+  }, [name]);
 
   return (
     <div className="px-4 py-8">
