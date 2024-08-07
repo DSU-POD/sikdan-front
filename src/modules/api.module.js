@@ -10,14 +10,13 @@ api.interceptors.request.use((request) => {
 
 api.interceptors.response.use(
   (response) => {
-    return response.data;
+    return Promise.resolve(response.data);
   },
   (error) => {
     if (error.response) {
       const { status, data } = error.response;
 
       if (status >= 400 && status < 600) {
-        console.log("error!");
         return Promise.reject(data);
       }
       return false;
