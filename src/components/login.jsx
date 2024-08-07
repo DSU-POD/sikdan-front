@@ -25,13 +25,15 @@ import Link from "next/link";
 import { api } from "@/modules/api.module";
 import { showToast } from "./layout/toast";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { setLoginData } from "@/store/reducers/member.reducer";
 
 export function LoginComponent() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const handleLogin = async (event) => {
     event.preventDefault();
     setError("");
@@ -41,12 +43,18 @@ export function LoginComponent() {
         userId,
         password,
       });
-      if (response.data === "test") {
+      if (response.result === "success") {
         showToast("로그인 성공");
+        const token = response.data;
+        localStorage.setItem("token", token);
+        dispatch(
+          setLoginData({
+            isLogin: true,
+            userId,
+          })
+        );
+        router.push("/main/feed");
       }
-      const token = response.data;
-      localStorage.setItem("token", token);
-      // 로그인 성공 후 리다이렉트 또는 다른 작업 수행
     } catch (err) {
       const isError = true;
       showToast("로그인에 실패했습니다. 다시 시도해주세요.", isError);
@@ -56,8 +64,7 @@ export function LoginComponent() {
   const handleRegister = (e) => {
     e.preventDefault();
 
-      router.push("/member/register/step1"); // Navigate to /member/register/step1
-   
+    router.push("/member/register/step1"); // Navigate to /member/register/step1
   };
 
   return (
@@ -110,7 +117,11 @@ export function LoginComponent() {
             </div>
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <Button type="submit" className="w-full mt-4 border border-black" onClick={handleLogin}>
+          <Button
+            type="submit"
+            className="w-full mt-4 border border-black"
+            onClick={handleLogin}
+          >
             로그인
           </Button>
         </form>
@@ -118,7 +129,12 @@ export function LoginComponent() {
           <Link href="#" className="hover:underline" prefetch={false}>
             아이디/비밀번호 찾기
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false} onClick={handleRegister}>
+          <Link
+            href="#"
+            className="hover:underline"
+            prefetch={false}
+            onClick={handleRegister}
+          >
             회원가입
           </Link>
         </div>
