@@ -21,15 +21,13 @@ const memberReducer = createSlice({
     registerStep4: {
       goal: "",
     },
-    login: {
-      isLogin : false,
-      userId : "",
-
-    }
+    loginData: {
+      isLogin: false,
+      userId: "",
+    },
   },
   reducers: {
     setRegisterStep1Data: (state, action) => {
-      console.log(action.payload)
       state.registerStep1.userId = action.payload.userId;
       state.registerStep1.password = action.payload.password;
       state.registerStep1.nickname = action.payload.nickname;
@@ -45,13 +43,12 @@ const memberReducer = createSlice({
       state.registerStep3.weight = action.payload.weight;
     },
     setRegisterStep4Data: (state, action) => {
-      console.log(action.payload.goal)
       state.registerStep4.goal = action.payload.goal;
     },
-    setloginData: (state, action) => {
-      state.login.isLogin = action.payload.isLogin;
-      state.login.userId = action.payload.userId;
-    }
+    setLoginData: (state, action) => {
+      state.loginData.isLogin = action.payload.isLogin;
+      state.loginData.userId = action.payload.userId;
+    },
   },
 });
 
@@ -60,6 +57,6 @@ export const {
   setRegisterStep2Data,
   setRegisterStep3Data,
   setRegisterStep4Data,
-  setloginData
+  setLoginData,
 } = memberReducer.actions;
 export default memberReducer.reducer;
