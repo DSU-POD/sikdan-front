@@ -1,25 +1,41 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { api } from "@/modules/api.module";
 
 export default function FoodSearchComponent({ name }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (name) {
+    if (searchTerm) {
       try {
-        const response = await fetch("YOUR_API_URL");
-        const data = await response.json();
-        setSearchResults([
+        //const response = await api.post("/main/food"); // 로컬 서버 URL로 변경
+       // const data = await response.json();
+        setSearchResults( [
           {
-            id: 1, // 아이템에 고유 ID를 추가합니다.
-            calories: 300,
-            name: "test",
-            fat: 10,
-            carbs: 10,
-            protein: 10,
+            id: 1,
+            name: '사과',
+            kcal: 52,
+            carb: 14,
+            protein: 0.3,
+            fat: 0.2,
           },
-        ]);
+          {
+            id: 2,
+            name: '바나나',
+            kcal: 96,
+            carb: 27,
+            protein: 1.3,
+            fat: 0.3,
+          },
+          {
+            id: 3,
+            name: '오렌지',
+            kcal: 47,
+            carb: 12,
+            protein: 0.9,
+            fat: 0.1,
+          }]);
       } catch (error) {
         console.error(error);
       }
@@ -38,7 +54,7 @@ export default function FoodSearchComponent({ name }) {
         <h1 className="text-3xl font-bold mb-4">Nutrition Information</h1>
         <form onSubmit={handleSearch} className="w-full">
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" onClick={handleSearch} />
             <Input
               type="text"
               placeholder="Search for a food item"
@@ -65,14 +81,14 @@ export default function FoodSearchComponent({ name }) {
                   className="w-full h-48 object-cover"
                 />
                 <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-1 text-xs font-medium">
-                  {item.calories} kcal
+                  {item.kcal} kcal
                 </div>
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-bold mb-2">{item.name}</h3>
                 <div className="grid grid-cols-2 gap-2 mb-4">
                   <div>
-                    <span className="font-medium">탄수화물</span> {item.carbs}g
+                    <span className="font-medium">탄수화물</span> {item.carb}g
                   </div>
                   <div>
                     <span className="font-medium">단백질</span> {item.protein}g
