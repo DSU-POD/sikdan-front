@@ -9,9 +9,12 @@ export default function Feed({ posts }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { page = 1 } = context.query; 
+  const type = context.query.type || 'expert'; 
+
   try {
-    const response = await axios.get('http://3.34.53.152:3001');
+    const response = await axios.get(`http://3.34.53.152:3001/feed/list/${page}?type=${type}`);
     const posts = response.data;
 
     return {
@@ -20,7 +23,7 @@ export async function getServerSideProps() {
       },
     };
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error('Error fetching posts:', error.message);
     return {
       props: {
         posts: [],
