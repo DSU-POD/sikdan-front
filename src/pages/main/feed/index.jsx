@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { FeedComponent } from "@/components/feed-component";
 import { Avatar } from '@radix-ui/react-avatar';
+import { current } from '@reduxjs/toolkit';
 
 export default function Feed({ posts }) {
   return (
@@ -13,7 +14,6 @@ export default function Feed({ posts }) {
 export async function getServerSideProps(context) {
   const { page = 1 } = context.query; 
   const type = context.query.type ?? 'expert'; 
-
   const posts = [
     {
       avatar: "",
@@ -44,3 +44,26 @@ export async function getServerSideProps(context) {
     },
   };
 }
+
+  /*
+  try {
+    const response = await axios.get(`http://3.34.53.152:3001/feed/list/${page}?type=${type}`);
+    const posts = response.data;
+
+    return {
+      props: {
+        posts,
+        currentPage: parseInt(page, 15),
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching posts:', error.message);
+    return {
+      props: {
+        posts: [],
+        currentPage: parseInt(page, 15),
+      },
+    }; 
+  } 
+} 
+*/
