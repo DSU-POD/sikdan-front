@@ -1,31 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  registerStep1: {
+    userId: "",
+    password: "",
+    nickname: "",
+    email: "",
+    trainer_yn: "",
+  },
+  registerStep2: {
+    gender: "",
+    age: "",
+  },
+  registerStep3: {
+    height: 0,
+    weight: 0,
+  },
+  registerStep4: {
+    goal: "",
+  },
+  loginData: {
+    isLogin: false,
+    userId: "",
+  },
+};
 const memberReducer = createSlice({
   name: "memberReducer",
-  initialState: {
-    registerStep1: {
-      userId: "",
-      password: "",
-      nickname: "",
-      email: "",
-      trainer_yn: "",
-    },
-    registerStep2: {
-      gender: "",
-      age: "",
-    },
-    registerStep3: {
-      height: 0,
-      weight: 0,
-    },
-    registerStep4: {
-      goal: "",
-    },
-    loginData: {
-      isLogin: false,
-      userId: "",
-    },
-  },
+  initialState,
   reducers: {
     setRegisterStep1Data: (state, action) => {
       state.registerStep1.userId = action.payload.userId;
@@ -49,6 +50,7 @@ const memberReducer = createSlice({
       state.loginData.isLogin = action.payload.isLogin;
       state.loginData.userId = action.payload.userId;
     },
+    resetAllState: () => initialState,
   },
 });
 
@@ -58,5 +60,6 @@ export const {
   setRegisterStep3Data,
   setRegisterStep4Data,
   setLoginData,
+  resetAllState,
 } = memberReducer.actions;
 export default memberReducer.reducer;
