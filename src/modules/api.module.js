@@ -5,6 +5,22 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((request) => {
+  // jwt 검사 예외 경로
+  const exceptPath = [
+    "/member/login",
+    "/member/find_id",
+    "/member/find_password",
+    "/member/register/complete",
+  ];
+
+  if (exceptPath.includes(window.location.pathname)) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return Promise.reject(401);
+    }
+
+    request.headers.Authorization = `Bearer ${token}`;
+  }
   return request;
 });
 
