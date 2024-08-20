@@ -12,8 +12,7 @@ api.interceptors.request.use((request) => {
     "/member/find_password",
     "/member/register/complete",
   ];
-
-  if (exceptPath.includes(window.location.pathname)) {
+  if (!exceptPath.includes(window.location.pathname)) {
     const token = localStorage.getItem("token");
     if (!token) {
       return Promise.reject(401);
