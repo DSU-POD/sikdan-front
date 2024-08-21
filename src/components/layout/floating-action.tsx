@@ -17,7 +17,6 @@ export default function FloatingActionButton() {
   const menuItems = [
     { icon: HouseIcon, name: "홈", link: "/main/feed" },
     { icon: PlusIcon, name: "추가", link: "/main/feed/meal" },
-    { icon: UserIcon, name: "마이페이지", link: "/main/feed" },
     { icon: LogOutIcon, name: "로그아웃", link: "/member/logout" },
   ];
 
