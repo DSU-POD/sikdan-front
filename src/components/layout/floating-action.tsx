@@ -17,16 +17,15 @@ export default function FloatingActionButton() {
   const menuItems = [
     { icon: HouseIcon, name: "홈", link: "/main/feed" },
     { icon: PlusIcon, name: "추가", link: "/main/feed/meal" },
-    { icon: UserIcon, name: "마이페이지", link: "/main/feed" },
     { icon: LogOutIcon, name: "로그아웃", link: "/member/logout" },
   ];
 
   return (
-    <div className="fixed bottom-4 right-4">
+    <div className="fixed bottom-20 right-4">
       <div className="relative">
         {/* 하위 메뉴 */}
         <div
-          className={`absolute bottom-full right-0 mb-2 transition-all duration-300 ${open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+          className={`absolute bottom-full rounded-lg bg-white right-0 mb-2 transition-all duration-300 ${open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
         >
           <div className="flex flex-col items-end space-y-2">
             {menuItems.map((item, index) => (
@@ -51,7 +50,8 @@ export default function FloatingActionButton() {
         {/* 햄버거 메뉴 버튼 */}
         <button
           onClick={toggleMenu}
-          className="rounded-full text-black p-4 shadow-lg transition-colors duration-300"
+          style={{ borderRadius: "9999px" }}
+          className="bg-[#D1F1E0] text-black p-4 shadow-lg transition-colors duration-300"
         >
           <MenuIcon />
         </button>

@@ -8,6 +8,7 @@ export default function Logout() {
   const router = useRouter();
   useEffect(() => {
     dispatch(resetAllState());
+    localStorage.removeItem("token");
     router.push("/");
   }, []);
 }

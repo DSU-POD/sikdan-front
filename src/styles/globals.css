@@ -4,6 +4,7 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
+  --radius: 10px; /* 원하는 값으로 설정 */
 }
 
 @media (prefers-color-scheme: dark) {
