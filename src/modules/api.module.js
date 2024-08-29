@@ -1,3 +1,4 @@
+import { showToast } from "@/components/layout/toast";
 import axios from "axios";
 
 export const api = axios.create({
@@ -12,7 +13,8 @@ api.interceptors.request.use((request) => {
     "/member/find_password",
     "/member/register/complete",
   ];
-  if (!exceptPath.includes(window.location.pathname)) {
+
+  if (!exceptPath.includes(request.url)) {
     const token = localStorage.getItem("token");
     if (!token) {
       return Promise.reject(401);
@@ -32,6 +34,7 @@ api.interceptors.response.use(
       const { status, data } = error.response;
 
       if (status >= 400 && status < 600) {
+        showToast(data.message, true);
         return Promise.reject(data);
       }
       return false;
