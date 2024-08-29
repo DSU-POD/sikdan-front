@@ -32,6 +32,7 @@ import { setRegisterStep3Data } from "@/store/reducers/member.reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { showToast } from "./layout/toast";
 
 export default function RegisterStep3Component() {
   const [height, setHeight] = useState("");
@@ -40,7 +41,7 @@ export default function RegisterStep3Component() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
   const router = useRouter();
-
+  const isError = true;
   useEffect(() => {
     const { height, weight } = data.registerStep3;
 
@@ -66,7 +67,7 @@ export default function RegisterStep3Component() {
     e.preventDefault();
 
     if (!height || !weight) {
-      showToast("모든 항목을 입력해주세요.")
+      showToast("모든 항목을 입력해주세요.", isError);
       return;
     }
     dispatch(
@@ -82,7 +83,7 @@ export default function RegisterStep3Component() {
       <Progress value={60} className="w-full mb-8" />
       <CardTitle className="mb-16">키와 몸무게를 알려주세요</CardTitle>
       <CardTitle className="mb-16 text-sm">
-        정확한 식단 추천 및 분석을 위해 성별과 나이 정보가 필요합니다.
+        정확한 식단 추천 및 분석을 위해 키와 몸무게 정보가 필요합니다.
       </CardTitle>
       <Card className="w-full border-0 shadow-none">
         <CardContent className="grid gap-4">
@@ -93,7 +94,7 @@ export default function RegisterStep3Component() {
                 <Input
                   id="height"
                   type="number"
-                  // value={height}
+                  value={height}
                   min="0"
                   max="400"
                   placeholder="키를 입력해주세요."
@@ -112,6 +113,7 @@ export default function RegisterStep3Component() {
                   type="number"
                   min="0"
                   max="300"
+                  value={weight}
                   placeholder="몸무게를 입력해주세요."
                   onChange={(e) => handleWeight(e)}
                   className="shadow h-20 text-lg"

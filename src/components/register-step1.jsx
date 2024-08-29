@@ -35,13 +35,12 @@ export default function RegisterStep1Component() {
   const [isnicknameavailable, setIsnicknameavailable] = useState(true);
   const [email, setEmail] = useState("");
   const [trainer_yn, setTrainer_yn] = useState("");
-  const [showempty, setShowempty] = useState(false);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
   const router = useRouter();
+  const isError = true;
 
   useEffect(() => {
-    console.log(data);
     const { userId, nickname, email, trainer_yn } = data.registerStep1;
     setUserid(userId);
     setNickname(nickname);
@@ -120,7 +119,7 @@ export default function RegisterStep1Component() {
       !email ||
       !trainer_yn
     ) {
-      showToast("모든 항목을 입력해주세요.")
+      showToast("모든 항목을 입력해주세요.", isError);
       return;
     }
 
@@ -136,7 +135,6 @@ export default function RegisterStep1Component() {
       );
       router.push("/member/register/step2"); // Navigate to /member/register/step2
     } else {
-      const isError = true;
       showToast("비밀번호가 일치하지 않습니다.", isError);
     }
   };
