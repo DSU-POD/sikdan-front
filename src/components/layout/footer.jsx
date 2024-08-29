@@ -1,35 +1,39 @@
 import Link from "next/link";
 import ToastComponent from "./toast";
 
-export default function FooterComponent() {
+export default function FooterComponent({ isBeforeLogin }) {
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t z-50 py-2 flex justify-between gap-4 items-center">
-        <Link
-          href="#"
-          className="flex px-4  flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
-          prefetch={false}
-        >
-          <HomeIcon className="w-6 h-6" />
-          <span className="text-xs">홈</span>
-        </Link>
-        <Link
-          href="#"
-          style={{ borderRadius: "9999px" }}
-          className="flex px-4 ml-8 flex-col rounded-lg p-4 bg-[#D1F1E0] items-center gap-1 text-muted-foreground hover:text-foreground"
-          prefetch={false}
-        >
-          <UserIcon className="w-6 h-6" />
-        </Link>
-        <Link
-          href="#"
-          className="flex px-4 flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
-          prefetch={false}
-        >
-          <UserIcon className="w-6 h-6" />
-          <span className="text-xs">마이페이지</span>
-        </Link>
-      </div>
+      {isBeforeLogin ? (
+        ""
+      ) : (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t z-50 py-2 flex justify-between gap-4 items-center">
+          <Link
+            href="#"
+            className="flex px-4  flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+            prefetch={false}
+          >
+            <HomeIcon className="w-6 h-6" />
+            <span className="text-xs">홈</span>
+          </Link>
+          <Link
+            href="#"
+            style={{ borderRadius: "9999px" }}
+            className="flex px-4 ml-8 flex-col rounded-lg p-4 bg-[#D1F1E0] items-center gap-1 text-muted-foreground hover:text-foreground"
+            prefetch={false}
+          >
+            <UserIcon className="w-6 h-6" />
+          </Link>
+          <Link
+            href="#"
+            className="flex px-4 flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+            prefetch={false}
+          >
+            <UserIcon className="w-6 h-6" />
+            <span className="text-xs">마이페이지</span>
+          </Link>
+        </div>
+      )}
       <ToastComponent />
     </>
   );
