@@ -1,7 +1,16 @@
+import { showToast } from "@/components/layout/toast";
 import axios from "axios";
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
+  validateStatus: (status) => {
+    if (status === 401) {
+      showToast("다시 로그인 후 시도해주세요.");
+      return false;
+    } else {
+      return true;
+    }
+  },
 });
 
 api.interceptors.request.use((request) => {
@@ -11,8 +20,10 @@ api.interceptors.request.use((request) => {
     "/member/find_id",
     "/member/find_password",
     "/member/register/complete",
+    "/member/register/duplicate",
   ];
-  if (!exceptPath.includes(window.location.pathname)) {
+
+  if (!exceptPath.includes(request.url)) {
     const token = localStorage.getItem("token");
     if (!token) {
       return Promise.reject(401);
@@ -30,9 +41,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response) {
       const { status, data } = error.response;
-
       if (status >= 400 && status < 600) {
-        return Promise.reject(data);
+        const isError = true;
+        showToast(data.message, isError);
+        return Promise.reject(status);
       }
       return false;
     }
@@ -45,11 +57,12 @@ export const formDataApi = axios.create({
     "Content-Type": "multipart/form-data",
   },
   validateStatus: (status) => {
-    if (status === 401 || status === 400) {
-      Promise.reject(status);
+    if (status === 401) {
+      showToast("다시 로그인 후 시도해주세요.");
       return false;
+    } else {
+      return true;
     }
-    return true;
   },
 });
 

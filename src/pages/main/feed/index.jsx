@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { FeedComponent } from "@/components/feed-component";
 import { Avatar } from '@radix-ui/react-avatar';
 import { current } from '@reduxjs/toolkit';
