@@ -14,7 +14,7 @@ export default function LayoutComponent({ children, isBeforeLogin }) {
           </div>
         </div>
       </div>
-      <FooterComponent />
+      <FooterComponent isBeforeLogin={isBeforeLogin} />
       {isBeforeLogin ? "" : <FloatingActionButton />}
     </>
   );
