@@ -43,7 +43,7 @@ export function LoginComponent() {
         userId,
         password,
       });
-      if (response.result === "success") {
+      if (response?.result === "success") {
         showToast("로그인 성공");
         const token = response.data;
         localStorage.setItem("token", token);
@@ -71,22 +71,16 @@ export function LoginComponent() {
     <div>
       <div className="flex flex-col items-center mb-8">
         <img
-          src="/placeholder.svg"
+          src="/tmp_logo.png"
           alt="MealMate Logo"
           wuserIdth={60}
           height={60}
           className="mb-2"
         />
-        <h1
-          style={{ color: "white" }}
-          className="text-2xl font-bold text-Black-800 dark:text-white-200"
-        >
+        <h1 className="text-2xl font-bold text-Black-800 dark:text-white-200">
           MealMate
         </h1>
-        <p
-          style={{ color: "white" }}
-          className="text-sm text-Black-600 dark:text-white-400"
-        >
+        <p className="text-sm text-Black-600 dark:text-white-400">
           당신을 위한 AI 식단 메이트
         </p>
       </div>
