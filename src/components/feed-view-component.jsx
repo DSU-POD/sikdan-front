@@ -134,7 +134,7 @@ export function FeedViewComponent({ id }) {
         <div className="space-y-2">
           <h2 className="text-xl font-bold">식단정보</h2>
         </div>
-        <div className="w-full">{getMealsIcon("아침")}</div>
+        <div className="w-full">{getMealsIcon(diet.meals)}</div>
         <div className="space-y-2">
           {diet.nutrient?.map((food, key) => {
             return (
