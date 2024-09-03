@@ -8,9 +8,12 @@ import { ClipLoader } from "react-spinners";
 import { useDispatch, useSelector } from "react-redux";
 import { setPredict, setWriteData } from "@/store/reducers/feed.reducer";
 import { useRouter } from "next/router";
+import { SunIcon } from "@heroicons/react/24/outline";
+import { CloudIcon, MoonIcon } from "@heroicons/react/24/solid";
 
 export default function MealAddComponent() {
   const [dietName, setDietName] = useState("");
+  const [meals, setMeals] = useState("");
   const [feedData, setFeedData] = useState([]);
   const [isPredict, setIsPredict] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -79,6 +82,11 @@ export default function MealAddComponent() {
       showToast("식단 이름을 입력해주세요", isError);
       return false;
     }
+
+    if (meals === "") {
+      showToast("아침, 점심, 또는 저녁 중 하나를 선택해주세요.", isError);
+      return false;
+    }
     if (isPredict === false) {
       showToast("식단 사진 분석을 진행해주세요.", isError);
       return false;
@@ -95,6 +103,7 @@ export default function MealAddComponent() {
       setWriteData({
         dietName,
         contents: "",
+        meals,
       })
     );
 
@@ -118,6 +127,42 @@ export default function MealAddComponent() {
                 type="text"
                 onChange={(e) => setDietName(e.currentTarget.value)}
               />
+            </div>
+            <div className="grid gap-4">
+              <div className="w-full flex flex-row justify-center items-center grid grid-cols-3 gap-4">
+                {/* 아침 */}
+                <Button
+                  className={`flex items-center shadow-md py-6 ${meals === "아침" ? "bg-yellow-100" : "bg-white"}`}
+                  onClick={() => setMeals("아침")}
+                >
+                  <SunIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-yellow-500" />
+                  <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+                    아침
+                  </p>
+                </Button>
+
+                {/* 점심 */}
+                <Button
+                  className={`flex items-center shadow-md py-6 ${meals === "점심" ? "bg-blue-100" : "bg-white"}`}
+                  onClick={() => setMeals("점심")}
+                >
+                  <CloudIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-blue-400" />
+                  <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+                    점심
+                  </p>
+                </Button>
+
+                {/* 저녁 */}
+                <Button
+                  className={`flex items-center shadow-md py-6 ${meals === "저녁" ? "bg-indigo-100" : "bg-white"}`}
+                  onClick={() => setMeals("저녁")}
+                >
+                  <MoonIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-indigo-600" />
+                  <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+                    저녁
+                  </p>
+                </Button>
+              </div>
             </div>
             <h2 className="text-2xl font-bold">식단 사진</h2>
             <div className="grid gap-2 py-8 px-4 shadow-md bg-white rounded-lg overflow-hidden">
