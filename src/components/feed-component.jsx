@@ -1,39 +1,115 @@
 // feed-component.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import  CommentSetion  from "@/components/CommentSection";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import CommentSetion from "@/components/CommentSection";
+import { useSelector } from "react-redux";
+import { api } from "@/modules/api.module";
+import { showToast } from "./layout/toast";
 
-export function FeedComponent({ posts }) {
+// FeedComponent
+export function FeedComponent({ page: pageNum, type }) {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [feedList, setFeedList] = useState([]);
+  const [page, setPage] = useState(pageNum);
+  const { userId } = useSelector((state) => state.memberReducer.loginData);
+
+  useEffect(() => {
+    setPage(pageNum);
+  }, []);
+
+  useEffect(() => {
+    getFeedList().then((result) => {
+      if (result) {
+        setFeedList(result.data);
+      }
+    });
+  }, []);
+
+  const getFeedList = async () => {
+    try {
+      const response = await api.get(`/feed/list/${page}?type=${type}`);
+      return response;
+    } catch (error) {
+      console.error("Error fetching posts:", error.message);
+    }
+  };
+  const handleLike = async (index, feedId) => {
+    try {
+      const response = await api.post("/feed/like", {
+        feedId,
+        userId, // 로그인된 사용자의 ID 전달
+      });
+      if (response.result === "success") {
+        setFeedList((feedList) => {
+          const update = [...feedList];
+          update[index].isLike = true;
+          return update;
+        });
+      }
+    } catch (error) {
+      showToast("오류가 발생하였습니다.", true);
+    }
+  };
+
+  const handleLikeCancel = async (index, feedId) => {
+    try {
+      // db -> like -> db insert
+      // like cancel -> db delete
+      const response = await api.delete("/feed/likeCancel", {
+        data: {
+          feedId,
+          userId,
+        },
+      });
+      if (response.result === "success") {
+        setFeedList((feedList) => {
+          const update = [...feedList];
+          update[index].isLike = false;
+          return update;
+        });
+      }
+    } catch (error) {
+      showToast("오류가 발생하였습니다.", true);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen">
       <main className="flex-1 overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {posts.map((post, index) => (
+          {feedList.map((feed, index) => (
             <Card key={index} className="rounded-lg overflow-hidden">
               <CardHeader className="flex items-start gap-3 p-4">
                 <div className="flex items-start gap-3">
                   <Avatar className="w-10 h-10 border">
-                    <AvatarImage src={post.avatar} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage src={feed.avatar} />
+                    <AvatarFallback>
+                      {feed.memberFeed?.nickname.slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid gap-0.5">
                     <Link href="#" className="font-medium" prefetch={false}>
-                      {post.username}
+                      <div className="text-gray-500 dark:text-gray-400 text-sm">
+                        @{feed.memberFeed?.userId}
+                      </div>
                     </Link>
                     <div className="text-gray-500 dark:text-gray-400 text-sm">
-                      {post.timeAgo}
+                      {feed.timeAgo}
                     </div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="p-0">
                 <img
-                  src={post.image}
+                  src={feed.feedDiet?.url}
                   width={600}
                   height={600}
                   alt="Post"
@@ -42,9 +118,32 @@ export function FeedComponent({ posts }) {
               </CardContent>
               <CardFooter className="p-4 grid gap-3">
                 <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="icon">
-                    <LikeButton />
-                  </Button>
+                  <button
+                    className={`flex items-center justify-center bg-transparent border-none cursor-pointer p-2 rounded-full transition-transform duration-200 ease-in-out ${
+                      feed.isLike ? "scale-110" : ""
+                    }`}
+                    aria-label="Like"
+                    onClick={() =>
+                      feed.isLike
+                        ? handleLikeCancel(index, feed.id)
+                        : handleLike(index, feed.id)
+                    }
+                  >
+                    <svg
+                      className="heart-icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill={feed.isLike ? "#72a555" : "none"}
+                      stroke={feed.isLike ? "#72a555" : "#606770"}
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -53,20 +152,16 @@ export function FeedComponent({ posts }) {
                     <MessageCircleIcon className="w-5 h-5" />
                     <span className="sr-only">Comment</span>
                   </Button>
-                  <Button variant="ghost" size="icon">
-                    <ShareIcon className="w-5 h-5" />
-                    <span className="sr-only">Share</span>
-                  </Button>
                 </div>
                 <div className="space-y-2">
                   <div>
                     <Link href="#" className="font-medium" prefetch={false}>
-                      {post.username}
+                      {feed.username}
                     </Link>
-                    {post.caption}
+                    {feed.caption}
                   </div>
                   <div className="text-gray-500 dark:text-gray-400 text-sm">
-                    View all {post.commentsCount} comments
+                    View all {feed.commentsCount} comments
                   </div>
                 </div>
               </CardFooter>
@@ -74,46 +169,32 @@ export function FeedComponent({ posts }) {
           ))}
         </div>
       </main>
-      <CommentSetion isOpen={isCommentOpen} onClose={() => setIsCommentOpen(false)} />
+      <CommentSetion
+        isOpen={isCommentOpen}
+        onClose={() => setIsCommentOpen(false)}
+      />
     </div>
   );
 }
 
-
-function LikeButton() {
-  const [liked, setLiked] = useState(false);
-
-  const handleLike = () => {
-    setLiked(!liked);
-  };
-
+// LikeButton 컴포넌트
+function LikeButton({ isLike }) {
   return (
     <>
       <button
-        onClick={handleLike}
-        className="like-button"
+        className={`flex items-center justify-center bg-transparent border-none cursor-pointer p-2 rounded-full transition-transform duration-200 ease-in-out ${
+          isLike ? "scale-110" : ""
+        }`}
         aria-label="Like"
       >
-        <HeartIcon liked={liked} />
+        <HeartIcon isLike={isLike} />
       </button>
-
-      <style jsx>{`
-        .like-button {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: transparent;
-          border: none;
-          cursor: pointer;
-          padding: 8px;
-          border-radius: 50%;
-        }
-      `}</style>
     </>
   );
 }
 
-function HeartIcon({ liked }) {
+// HeartIcon 컴포넌트
+function HeartIcon({ isLike }) {
   return (
     <svg
       className="heart-icon"
@@ -121,8 +202,8 @@ function HeartIcon({ liked }) {
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill={liked ? "#72a555" : "none"} 
-      stroke={liked ? "#72a555" : "#606770"}
+      fill={isLike ? "#72a555" : "none"}
+      stroke={isLike ? "#72a555" : "#606770"}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -131,6 +212,48 @@ function HeartIcon({ liked }) {
     </svg>
   );
 }
+
+// MessageCircleIcon 컴포넌트
+function MessageCircleIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+    </svg>
+  );
+}
+/*
+function ShareIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+      <polyline points="16 6 12 2 8 6" />
+      <line x1="12" x2="12" y1="2" y2="15" />
+    </svg>
+  );
+}
+*/
 
 /* function ThumbsUpIcon(props) {
   return (
@@ -213,26 +336,7 @@ function InstagramIcon(props) {
   );
 } */
 
-function MessageCircleIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-    </svg>
-  );
-}
-
-
+/*
 function SearchIcon(props) {
   return (
     <svg
@@ -252,29 +356,9 @@ function SearchIcon(props) {
     </svg>
   );
 }
+ */
 
-
-function ShareIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-      <polyline points="16 6 12 2 8 6" />
-      <line x1="12" x2="12" y1="2" y2="15" />
-    </svg>
-  );
-}
-
+/*
 function SquarePlusIcon(props) {
   return (
     <svg
@@ -294,9 +378,9 @@ function SquarePlusIcon(props) {
       <path d="M12 8v8" />
     </svg>
   );
-}
+} */
 
-
+/*
 function XIcon(props) {
   return (
     <svg
@@ -315,4 +399,4 @@ function XIcon(props) {
       <path d="m6 6 12 12" />
     </svg>
   );
-}
+} */
