@@ -3,16 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { api } from "@/modules/api.module";
-import { DeleteIcon, Edit3Icon } from "lucide-react";
-import {
-  HamburgerMenuIcon,
-  DotsHorizontalIcon,
-  ChevronDownIcon,
-} from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import CommentWriteComponent from "./comment-write";
 import LikeComponent from "./like-component";
 import CommentComponent from "./comment";
+import { SunIcon } from "@heroicons/react/24/outline";
+import { CloudIcon, MoonIcon } from "@heroicons/react/24/solid";
 
 export function FeedViewComponent({ id }) {
   const [feed, setFeed] = useState({});
@@ -30,7 +26,43 @@ export function FeedViewComponent({ id }) {
       setFeed(feed);
     }
   };
-
+  const getMealsIcon = (meals) => {
+    switch (meals) {
+      case "아침":
+        return (
+          <Button
+            className={`w-full flex items-center shadow-md py-6 bg-yellow-100`}
+          >
+            <SunIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-yellow-500" />
+            <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+              아침
+            </p>
+          </Button>
+        );
+      case "점심":
+        return (
+          <Button
+            className={`w-full flex items-center shadow-md py-6 bg-blue-100`}
+          >
+            <CloudIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-blue-400" />
+            <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+              점심
+            </p>
+          </Button>
+        );
+      case "저녁":
+        return (
+          <Button
+            className={`w-full flex items-center shadow-md py-6 bg-blue-100}`}
+          >
+            <MoonIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-indigo-600" />
+            <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+              저녁
+            </p>
+          </Button>
+        );
+    }
+  };
   useEffect(() => {
     handleGetFeed();
   }, []);
@@ -102,6 +134,7 @@ export function FeedViewComponent({ id }) {
         <div className="space-y-2">
           <h2 className="text-xl font-bold">식단정보</h2>
         </div>
+        <div className="w-full">{getMealsIcon(diet.meals)}</div>
         <div className="space-y-2">
           {diet.nutrient?.map((food, key) => {
             return (
