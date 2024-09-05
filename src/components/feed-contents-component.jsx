@@ -7,6 +7,8 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/router";
 import { api } from "@/modules/api.module";
 import { useState } from "react";
+import { SunIcon } from "@heroicons/react/24/outline";
+import { CloudIcon, MoonIcon } from "@heroicons/react/24/solid";
 
 export function FeedContentsComponent() {
   const { predict, writeData } = useSelector((state) => state.feedReducer);
@@ -14,12 +16,13 @@ export function FeedContentsComponent() {
 
   const router = useRouter();
   const handleSubmit = async () => {
-    const { dietName } = writeData;
+    const { dietName, meals } = writeData;
     const result = await api.post(`/feed/write`, {
       predict,
       writeData: {
         dietName,
         contents,
+        meals,
       },
     });
 
@@ -28,6 +31,43 @@ export function FeedContentsComponent() {
 
   const handleBack = () => {
     router.push(`/main/feed/meal`);
+  };
+  const getMealsIcon = (meals) => {
+    switch (meals) {
+      case "아침":
+        return (
+          <Button
+            className={`w-full flex items-center shadow-md py-6 bg-yellow-100`}
+          >
+            <SunIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-yellow-500" />
+            <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+              아침
+            </p>
+          </Button>
+        );
+      case "점심":
+        return (
+          <Button
+            className={`w-full flex items-center shadow-md py-6 bg-blue-100`}
+          >
+            <CloudIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-blue-400" />
+            <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+              점심
+            </p>
+          </Button>
+        );
+      case "저녁":
+        return (
+          <Button
+            className={`w-full flex items-center shadow-md py-6 bg-blue-100}`}
+          >
+            <MoonIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-indigo-600" />
+            <p className="ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800">
+              저녁
+            </p>
+          </Button>
+        );
+    }
   };
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full">
@@ -41,7 +81,7 @@ export function FeedContentsComponent() {
           <span>식단등록</span>
         </Link>
       </div>
-      <div className="flex flex-col items-center space-y-6">
+      <div className="flex flex-col gap-4 items-center space-y-6">
         <img
           src={`${predict.url}`}
           alt="Food Image"
@@ -53,7 +93,9 @@ export function FeedContentsComponent() {
         <div className="text-center">
           <h2 className="text-2xl font-bold">{writeData.dietName}</h2>
         </div>
+        <div className="w-full">{getMealsIcon("아침")}</div>
         <div className="w-full">
+          <div className="space-y-4"></div>
           <div className="space-y-4">
             <h2 className="text-xl font-bold">식단정보</h2>
             <hr />

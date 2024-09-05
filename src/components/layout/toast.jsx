@@ -29,8 +29,6 @@ export default function ToastComponent() {
 
   return (
     <>
-      {console.log(toast.isError)}
-
       {toast.isShow ? (
         toast.isError ? (
           <ErrorToast message={toast.message} setToast={setToast} />

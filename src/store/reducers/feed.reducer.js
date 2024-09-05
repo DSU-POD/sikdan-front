@@ -11,6 +11,7 @@ const initialState = {
   writeData: {
     dietName: "",
     contents: "",
+    meals: "",
   },
 };
 const feedReducer = createSlice({
@@ -26,6 +27,7 @@ const feedReducer = createSlice({
     setWriteData: (state, action) => {
       state.writeData.dietName = action.payload.dietName;
       state.writeData.contents = action.payload.contents;
+      state.writeData.meals = action.payload.meals;
     },
   },
 });
