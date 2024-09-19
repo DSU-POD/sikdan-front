@@ -1,6 +1,6 @@
 import { FeedViewComponent } from "@/components/feed-view-component";
 
-export default function FeedView({ id }) {
+export default function FeedEdit({ id }) {
   return <FeedViewComponent id={id} />;
 }
 
