@@ -1,97 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useSelector } from "react-redux"; // Redux에서 사용자 정보 가져오기
+import moment from "moment"; // moment.js import
+import "moment/locale/ko"; // 한국어 로케일
 
-export default function CommentSection({ isOpen, onClose }) {
-  if (!isOpen) return null;
+export default function CommentSection({
+  isOpen,
+  onClose,
+  comments: initialComments = [],
+  onSaveComment, // 댓글 저장 함수 추가
+}) {
+  // 댓글 상태 관리
+  const [comments, setComments] = useState(initialComments);
+  const [newComment, setNewComment] = useState("");
 
+  // Redux에서 로그인한 사용자 정보 가져오기
+  const { userId, nickname, avatar } = useSelector(
+    (state) => state.memberReducer.loginData
+  );
+
+  useEffect(() => {
+    console.log(comments);
+  }, [comments]);
+  if (!isOpen) return null; // 모달이 열릴 때만 렌더링
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 flex items-end mb-16 justify-center p-4">
       <div className="bg-white dark:bg-gray-950 rounded-t-2xl w-full max-w-md shadow-lg">
+        {/* 상단 닫기 버튼 */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <Avatar className="w-10 h-10 border">
-              <AvatarImage src="/placeholder-user.jpg" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-0.5">
-              <div className="font-medium">shadcn</div>
-              <div className="text-gray-500 dark:text-gray-400 text-sm">
-                3h ago
-              </div>
-            </div>
-          </div>
-          <button 
-            onClick={onClose} 
+          <div className="font-medium">댓글</div>
+          <button
+            onClick={onClose}
             className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           >
             &times;
           </button>
         </div>
-        <div className="p-4 space-y-4">
-          {/* 댓글 내용 */}
-          <div className="flex items-start gap-3">
-            <Avatar className="w-10 h-10 border">
-              <AvatarImage src="/placeholder-user.jpg" />
-              <AvatarFallback>JP</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <div className="font-medium flex flex-row items-center gap-4">
-                <span>shuding_</span>
-                <div className="text-gray-500 dark:text-gray-400 text-sm">
-                  1h
+
+        {/* 댓글 목록 */}
+        <div className="p-4 space-y-4 max-h-80 overflow-y-auto">
+          {comments.length > 0 ? (
+            comments.map((comment, index) => (
+              <div key={index} className="flex items-start gap-3">
+                <Avatar className="w-10 h-10 border">
+                  <AvatarFallback>
+                    {comment.memberComment?.nickname.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="font-medium flex flex-row items-center gap-4">
+                    <span>@{comment.memberComment.userId}</span>
+                    <div className="text-gray-500 dark:text-gray-400 text-sm">
+                      {moment(comment.createdAt).fromNow()}{" "}
+                      {/* 작성한 시간을 상대적으로 표시 */}
+                    </div>
+                  </div>
+                  <div className="text-gray-500 dark:text-gray-400 text-sm">
+                    {comment.contents}
+                  </div>
                 </div>
               </div>
-              <div className="text-gray-500 dark:text-gray-400 text-sm">
-                Great post!
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon">
-                  <ReplyIcon className="w-4 h-4" />
-                  <span className="sr-only">Reply</span>
-                </Button>
-              </div>
+            ))
+          ) : (
+            // 댓글이 없을 때 중앙에 메시지 표시
+            <div className="flex flex-col justify-center items-center text-center h-40">
+              <div className="text-lg font-semibold">아직 댓글이 없습니다</div>
+              <div className="text-gray-500">댓글을 남겨보세요.</div>
             </div>
-          </div>
-          {/* 댓글 입력 섹션 */}
-          <div className="flex items-center gap-2 border-t border-gray-200 dark:border-gray-800 pt-4">
-            <Avatar className="w-8 h-8 border">
-              <AvatarImage src="/placeholder-user.jpg" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Textarea
-              placeholder="댓글을 입력해주세요."
-              className="flex-1 resize-none border-0 focus:ring-0 dark:bg-gray-950 dark:text-gray-50"
-            />
-            <Button variant="ghost" size="icon">
-              <SendIcon className="w-4 h-4" />
-              <span className="sr-only">Send</span>
-            </Button>
-          </div>
+          )}
         </div>
       </div>
     </div>
-  );
-}
-
-function ReplyIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="9 17 4 12 9 7" />
-      <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
-    </svg>
   );
 }
 
