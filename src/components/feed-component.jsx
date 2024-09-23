@@ -129,7 +129,10 @@ export function FeedComponent({ page: pageNum, type }) {
               </CardHeader>
               <CardContent
                 className="p-0"
-                onClick={() => router.push(`/main/feed/view/${feed.id}`)}
+                onClick={() => {
+                  const { id } = feed;
+                  router.push(`/main/feed/${id}/`);
+                }}
               >
                 <img
                   src={feed.feedDiet?.url}
@@ -180,7 +183,7 @@ export function FeedComponent({ page: pageNum, type }) {
                 <div className="text-lg font-semibold">{feed.subject}</div>
                 <div
                   className="text-base text-gray-800 dark:text-gray-200"
-                  onClick={() => router.push(`/main/feed/view/${feed.id}`)}
+                  onClick={() => router.push(`/main/feed/${feed.id}/`)}
                 >
                   {feed.contents}
                 </div>
@@ -188,11 +191,15 @@ export function FeedComponent({ page: pageNum, type }) {
             </Card>
           ))}
         </div>
+
         <Paginate
           totalCount={totalCount}
           type={type}
           page={page}
-          onPageChange={(page) => setPage(page)}
+          onPageChange={(page) => {
+            setPage(page);
+            router.push(`/main/feed/?page=${page}&type=${type}`);
+          }}
         />
       </main>
       {/* 선택된 피드의 댓글을 CommentSection에 전달 */}
