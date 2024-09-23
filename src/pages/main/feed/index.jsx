@@ -1,6 +1,6 @@
 import { FeedComponent } from "@/components/feed-component";
 
-export default function Feed({ type }) {
+export default function Feed({ page, type }) {
   return (
     <>
       <FeedComponent page={page} type={type} />
