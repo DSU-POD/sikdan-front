@@ -1,34 +1,35 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { api } from "@/modules/api.module";
 
 export default function FoodSearchComponent({ name }) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(name || ""); // 초기 음식명은 URL에서 받아온 name
   const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // 음식 검색 함수
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (name) {
+    if (searchTerm) {
+      setLoading(true); // 로딩 상태 시작
       try {
-        const response = await fetch("YOUR_API_URL");
+        // 서버로 GET 요청을 보내 음식 데이터 검색 (여기서는 임시로 직접 설정한 데이터를 사용)
+        const response = await api.get(`/food/${searchTerm}`); // 실제 서버 요청
         const data = await response.json();
-        setSearchResults([
-          {
-            id: 1, // 아이템에 고유 ID를 추가합니다.
-            calories: 300,
-            name: "test",
-            fat: 10,
-            carbs: 10,
-            protein: 10,
-          },
-        ]);
+        setSearchResults(data); // 응답 데이터를 결과로 설정
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false); // 로딩 상태 종료
       }
     }
   };
 
+  // 컴포넌트가 처음 로드되면 URL의 음식 이름을 사용하여 검색
   useEffect(() => {
     if (name) {
       setSearchTerm(name);
+      handleSearch(); // 자동으로 검색 수행
     }
   }, [name]);
 
@@ -38,7 +39,10 @@ export default function FoodSearchComponent({ name }) {
         <h1 className="text-3xl font-bold mb-4">Nutrition Information</h1>
         <form onSubmit={handleSearch} className="w-full">
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <SearchIcon
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500"
+              onClick={handleSearch}
+            />
             <Input
               type="text"
               placeholder="Search for a food item"
@@ -49,13 +53,14 @@ export default function FoodSearchComponent({ name }) {
           </div>
         </form>
       </div>
+
+      {/* 검색 결과 표시 */}
       <div className="space-y-6">
-        {searchResults?.length > 0 &&
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : searchResults?.length > 0 ? (
           searchResults.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
-            >
+            <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="relative">
                 <img
                   src="/placeholder.svg"
@@ -65,14 +70,14 @@ export default function FoodSearchComponent({ name }) {
                   className="w-full h-48 object-cover"
                 />
                 <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-1 text-xs font-medium">
-                  {item.calories} kcal
+                  {item.kcal} kcal
                 </div>
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-bold mb-2">{item.name}</h3>
                 <div className="grid grid-cols-2 gap-2 mb-4">
                   <div>
-                    <span className="font-medium">탄수화물</span> {item.carbs}g
+                    <span className="font-medium">탄수화물</span> {item.carb}g
                   </div>
                   <div>
                     <span className="font-medium">단백질</span> {item.protein}g
@@ -83,14 +88,14 @@ export default function FoodSearchComponent({ name }) {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-12">
+            <SearchIcon className="w-12 h-12 mx-auto mb-4" />
+            <p>Search for a food item to see its nutrition information.</p>
+          </div>
+        )}
       </div>
-      {searchResults.length === 0 && (
-        <div className="text-center text-gray-500 py-12">
-          <SearchIcon className="w-12 h-12 mx-auto mb-4" />
-          <p>Search for a food item to see its nutrition information.</p>
-        </div>
-      )}
     </div>
   );
 }
@@ -111,26 +116,6 @@ function SearchIcon(props) {
     >
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-function XIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
     </svg>
   );
 }
