@@ -12,26 +12,36 @@ export default function Header() {
   const router = useRouter();
 
   const handleSearch = (e) => {
-    searchQuery
-      ? router.push(`/main/food/${searchQuery}`)
-      : showToast("검색어를 입력해주세요", true);
+    router.push(`/main/food/`);
   };
   return (
-    <header className="w-full bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 px-6 py-6 flex gap-4 justify-between items-center">
-      <Link
-        href="/main/feed/"
-        className="flex items-center justify-between gap-2"
-        prefetch={false}
-      >
-        <span className="font-bold text-lg">MealMate</span>
-      </Link>
+    <header className="w-full bg-[#F0F0F0] dark:bg-gray-950 dark:border-gray-800 px-6 py-6 flex justify-between gap-4 items-center">
+      <div className="flex flex-row gap-4">
+        <Link
+          href="/main/feed/"
+          className="flex items-center justify-between gap-2"
+          prefetch={false}
+        >
+          <span className="font-bold text-xl">일반인</span>
+        </Link>
+
+        <Link
+          href="/main/feed/"
+          className="flex items-center justify-between gap-2"
+          prefetch={false}
+        >
+          <span className="font-bold text-xl">전문가</span>
+        </Link>
+      </div>
+      {/*  }
       <Input
         type="text"
         placeholder="검색하실 음식명을 입력해주세요."
         onChange={(e) => setSearchQuery(e.currentTarget.value)}
-        className="flex-1 bg-[#ececec] rounded-full border-none focus:ring-0 focus:outline-none text-primary-foreground placeholder:text-muted-foreground"
+        className="flex-1 bg-white border rounded-full focus:ring-0 focus:outline-none text-primary-foreground placeholder:text-muted-foreground"
       />
-      <SearchIcon onClick={handleSearch} />
+      { */}
+      <SearchIcon className="justify-end" onClick={handleSearch} />
     </header>
   );
 }

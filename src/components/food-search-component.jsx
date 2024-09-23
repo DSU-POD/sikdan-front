@@ -3,48 +3,33 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/modules/api.module";
 
 export default function FoodSearchComponent({ name }) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(name || ""); // 초기 음식명은 URL에서 받아온 name
   const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // 음식 검색 함수
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchTerm) {
+      setLoading(true); // 로딩 상태 시작
       try {
-        //const response = await api.post("/main/food"); // 로컬 서버 URL로 변경
-       // const data = await response.json();
-        setSearchResults( [
-          {
-            id: 1,
-            name: '사과',
-            kcal: 52,
-            carb: 14,
-            protein: 0.3,
-            fat: 0.2,
-          },
-          {
-            id: 2,
-            name: '바나나',
-            kcal: 96,
-            carb: 27,
-            protein: 1.3,
-            fat: 0.3,
-          },
-          {
-            id: 3,
-            name: '오렌지',
-            kcal: 47,
-            carb: 12,
-            protein: 0.9,
-            fat: 0.1,
-          }]);
+        // 서버로 GET 요청을 보내 음식 데이터 검색 (여기서는 임시로 직접 설정한 데이터를 사용)
+        const response = await api.get(`/food/${searchTerm}`); // 실제 서버 요청
+        const data = await response.json();
+        setSearchResults(data); // 응답 데이터를 결과로 설정
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false); // 로딩 상태 종료
       }
     }
   };
 
+  // 컴포넌트가 처음 로드되면 URL의 음식 이름을 사용하여 검색
   useEffect(() => {
     if (name) {
       setSearchTerm(name);
+      handleSearch(); // 자동으로 검색 수행
     }
   }, [name]);
 
@@ -54,7 +39,10 @@ export default function FoodSearchComponent({ name }) {
         <h1 className="text-3xl font-bold mb-4">Nutrition Information</h1>
         <form onSubmit={handleSearch} className="w-full">
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" onClick={handleSearch} />
+            <SearchIcon
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500"
+              onClick={handleSearch}
+            />
             <Input
               type="text"
               placeholder="Search for a food item"
@@ -65,13 +53,14 @@ export default function FoodSearchComponent({ name }) {
           </div>
         </form>
       </div>
+
+      {/* 검색 결과 표시 */}
       <div className="space-y-6">
-        {searchResults?.length > 0 &&
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : searchResults?.length > 0 ? (
           searchResults.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
-            >
+            <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="relative">
                 <img
                   src="/placeholder.svg"
@@ -99,14 +88,14 @@ export default function FoodSearchComponent({ name }) {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-12">
+            <SearchIcon className="w-12 h-12 mx-auto mb-4" />
+            <p>Search for a food item to see its nutrition information.</p>
+          </div>
+        )}
       </div>
-      {searchResults.length === 0 && (
-        <div className="text-center text-gray-500 py-12">
-          <SearchIcon className="w-12 h-12 mx-auto mb-4" />
-          <p>Search for a food item to see its nutrition information.</p>
-        </div>
-      )}
     </div>
   );
 }
@@ -127,26 +116,6 @@ function SearchIcon(props) {
     >
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-function XIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
     </svg>
   );
 }

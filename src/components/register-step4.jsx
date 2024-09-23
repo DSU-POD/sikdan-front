@@ -39,13 +39,19 @@ export default function RegisterStep4Component() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
   const router = useRouter();
+  const isError = true;
 
-  const registerStep1 = useSelector((state) => state.memberReducer.registerStep1);
-  const registerStep2 = useSelector((state) => state.memberReducer.registerStep2);
-  const registerStep3 = useSelector((state) => state.memberReducer.registerStep3);
+  const registerStep1 = useSelector(
+    (state) => state.memberReducer.registerStep1
+  );
+  const registerStep2 = useSelector(
+    (state) => state.memberReducer.registerStep2
+  );
+  const registerStep3 = useSelector(
+    (state) => state.memberReducer.registerStep3
+  );
 
   useEffect(() => {
-    console.log(data);
     const { goal } = data.registerStep4;
     setGoal(goal);
   }, [data]);
@@ -60,11 +66,11 @@ export default function RegisterStep4Component() {
     router.push("/member/register/step3"); // Navigate to /member/register/step3
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!goal) {
-      setShowempty(true);
+      showToast("목표를 설정해주세요.", isError);
       return;
     }
 
@@ -74,12 +80,10 @@ export default function RegisterStep4Component() {
       })
     );
 
-    showToast("모든 항목을 입력해주세요.")
-
-    const { userId, password, nickname, email, trainer_yn } = registerStep1; 
+    const { userId, password, nickname, email, trainer_yn } = registerStep1;
     const { gender, age } = registerStep2;
-    const { height, weight } = registerStep3; 
-    
+    const { height, weight } = registerStep3;
+
     const registrationData = {
       registerData: {
         userId,
@@ -91,31 +95,29 @@ export default function RegisterStep4Component() {
         age,
         height,
         weight,
-        goal
-      }
+        goal,
+      },
     };
 
-    try{
-      const response = await api.post("/member/register/complete",registrationData); 
-      if (response.data === "success"){
-        showToast("회원가입이 성공하였습니다.");
-        router.push("/member/register/login");
-      }
-      const token  = response.data;
-      localStorage.setItem("token", token);
-    } catch(err) {
-      const isError = true;
-      console.log(err)
+    const response = await api.post(
+      "/member/register/complete",
+      registrationData
+    );
+
+    if (response.result === "success") {
+      showToast("회원가입이 성공하였습니다.");
+      router.push("/");
+    } else {
       showToast("회원가입에 실패했습니다. 다시 시도해주세요.", isError);
     }
   };
 
   return (
     <>
-      <Progress value={90} className="w-full mb-8" />
+      <Progress value={95} className="w-full mb-8" />
       <CardTitle className="mb-16">목표가 무엇인가요?</CardTitle>
       <CardTitle className="mb-16 text-sm">
-        정확한 식단 추천 및 분석을 위해 성별과 나이 정보가 필요합니다.
+        정확한 식단 추천 및 분석을 위해 목표 정보가 필요합니다.
       </CardTitle>
 
       <Card className="w-full border-0">

@@ -1,30 +1,23 @@
-import axios from 'axios';
 import { FeedComponent } from "@/components/feed-component";
 
-export default function Feed({ posts }) {
+export default function Feed({ page, type }) {
   return (
     <>
-      <FeedComponent posts={posts} />
+      <FeedComponent page={page} type={type} />
     </>
   );
 }
 
-export async function getServerSideProps() {
-  try {
-    const response = await axios.get('http://3.34.53.152:3001');
-    const posts = response.data;
+export const getServerSideProps = (context) => {
+  const page =
+    context.query.page === 0 || !context.query.page ? 1 : context.query.page;
 
-    return {
-      props: {
-        posts,
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    return {
-      props: {
-        posts: [],
-      },
-    };
-  }
-}
+  const type = context.query.type ?? "expert";
+
+  return {
+    props: {
+      page,
+      type,
+    },
+  };
+};
