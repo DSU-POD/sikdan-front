@@ -34,9 +34,11 @@ export default function MealAddComponent() {
       showToast("음식이 탐지되지 않았습니다.", isError);
       setIsPredict(false);
     }
+    setLoading(false);
 
     if (response.result === "success") {
       setIsPredict(true);
+
       const { predict, url } = response.data;
       if (predict.nutrient?.length === 0) {
         showToast("음식이 탐지되지 않았습니다.", isError);
@@ -48,7 +50,6 @@ export default function MealAddComponent() {
           url,
         }));
       }
-      setLoading(false);
       dispatch(
         setPredict({
           predict,
@@ -69,7 +70,7 @@ export default function MealAddComponent() {
               ? {
                   ...food,
 
-                  [category]: parseInt(value),
+                  [category]: value === "" ? 0 : parseInt(value),
                 }
               : food;
           }),
