@@ -5,11 +5,10 @@ export const api = axios.create({
   baseURL: `/api/`,
   validateStatus: (status) => {
     if (status === 401) {
-      showToast("다시 로그인 후 시도해주세요.");
-      return false;
-    } else {
-      return true;
+      showToast("다시 로그인 후 시도해주세요.", true);
     }
+
+    return status >= 200 && status < 300;
   },
 });
 
