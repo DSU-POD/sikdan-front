@@ -51,7 +51,7 @@ api.interceptors.response.use(
 );
 
 export const formDataApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: `/api/`,
   headers: {
     "Content-Type": "multipart/form-data",
   },
