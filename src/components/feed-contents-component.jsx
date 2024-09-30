@@ -26,7 +26,7 @@ export function FeedContentsComponent() {
       },
     });
 
-    router.push(`/main/feed/view/${result.data}`);
+    router.push(`/main/feed/${result.data}`);
   };
 
   const handleBack = () => {
@@ -93,7 +93,7 @@ export function FeedContentsComponent() {
         <div className="text-center">
           <h2 className="text-2xl font-bold">{writeData.dietName}</h2>
         </div>
-        <div className="w-full">{getMealsIcon("아침")}</div>
+        <div className="w-full">{getMealsIcon(writeData.meals)}</div>
         <div className="w-full">
           <div className="space-y-4"></div>
           <div className="space-y-4">
@@ -134,6 +134,11 @@ export function FeedContentsComponent() {
                 </div>
               );
             })}
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-sm">
+              <p className="text-lg font-semibold">
+                총 칼로리 : {predict?.total_calories}kcal
+              </p>
+            </div>
           </div>
         </div>
         <div className="w-full">
