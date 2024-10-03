@@ -303,7 +303,12 @@ export default function MealAddComponent() {
                   </h3>
                 </div>
               )}
-            </div>{" "}
+            </div>
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-sm">
+              <p className="text-lg font-semibold">
+                총 칼로리 : {feedData.predict?.total_calories}kcal
+              </p>
+            </div>
           </div>
         ) : (
           ""
