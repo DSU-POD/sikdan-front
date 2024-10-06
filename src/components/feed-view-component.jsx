@@ -9,11 +9,15 @@ import LikeComponent from "./like-component";
 import CommentComponent from "./comment";
 import { SunIcon } from "@heroicons/react/24/outline";
 import { CloudIcon, MoonIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
+import FeedDeleteComponent from "./feed-delete-component";
+import ExpertBadgeComponent from "./ui/expert-badge";
 
 export function FeedViewComponent({ id }) {
   const [feed, setFeed] = useState({});
   const [commentList, setCommentList] = useState([]);
   const [diet, setDiet] = useState({});
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const handleGetFeed = async () => {
     const response = await api.get(`/feed/view/${id}`);
@@ -67,17 +71,20 @@ export function FeedViewComponent({ id }) {
     handleGetFeed();
   }, []);
   return (
-    <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg w-full">
+    <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg w-full flex flex-col gap-8">
       <div className="p-4 border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+          <Avatar className="h-8 w-8">
             <AvatarFallback>
-              <XIcon className="w-full h-full" />
+              {feed.memberFeed?.nickname.substring(0, 2)}
             </AvatarFallback>
           </Avatar>
+
           <div className="flex-1">
-            <div className="font-medium">{feed.memberFeed?.nickname}</div>
+            <div className="flex flex-row align-center gap-2 font-medium">
+              {feed.memberFeed?.nickname}
+              <ExpertBadgeComponent />
+            </div>
             <div className="text-gray-500 dark:text-gray-400 text-sm">
               @{feed.memberFeed?.userId}
             </div>
@@ -98,21 +105,22 @@ export function FeedViewComponent({ id }) {
             >
               <div className="py-1">
                 <MenuItem>
-                  <a
-                    href="#"
+                  <Link
+                    href={`/main/feed/${feed.id}/edit`}
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                   >
                     수정
-                  </a>
+                  </Link>
                 </MenuItem>
 
                 <MenuItem>
-                  <a
+                  <Link
                     href="#"
+                    onClick={() => setDeleteOpen(true)}
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                   >
                     삭제
-                  </a>
+                  </Link>
                 </MenuItem>
               </div>
             </MenuItems>
@@ -130,20 +138,20 @@ export function FeedViewComponent({ id }) {
         />
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-4 flex flex-col gap-4">
         <div className="space-y-2">
           <h2 className="text-xl font-bold">식단정보</h2>
         </div>
         <div className="w-full">{getMealsIcon(diet.meals)}</div>
         <div className="space-y-2">
+          <span className="text-gray-500 text-md">
+            총 칼로리 : {diet?.total_calories}kcal
+          </span>
           {diet.nutrient?.map((food, key) => {
             return (
-              <div
-                key={key}
-                className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-sm"
-              >
+              <div key={key} className="bg-white dark:bg-gray-900 rounded-lg">
                 <p className="text-lg font-semibold">{food.name}</p>
-                <div className="grid grid-cols-3 gap-4 mt-2">
+                <div className="grid grid-cols-3 gap-4 mt-4">
                   <div className="flex flex-col">
                     <p className="text-gray-500 dark:text-gray-400">단백질</p>
                     <div className="flex flex-row items-center">
@@ -168,13 +176,43 @@ export function FeedViewComponent({ id }) {
           })}
         </div>
       </div>
+
       <div className="p-4 space-y-4">
         <div className="space-y-2">
           <h2 className="text-xl font-bold">{diet?.dietName}</h2>
           <p className="text-gray-500 dark:text-gray-400">{feed.contents}</p>
         </div>
-        <Separator />
-
+      </div>
+      <div className="p-4 space-y-4">
+        {feed.ai_feedback && feed.ai_feedback.length > 0 ? (
+          <>
+            <div className="border-y py-4 border-gray-200 dark:border-gray-800">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src="/mealmatebot.png" alt="@shadcn" />
+                  <AvatarFallback>
+                    <XIcon className="w-full h-full" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex flex-row align-center gap-2 font-medium">
+                    밀메이트 AI 피드백 봇
+                  </div>
+                  <div className="text-gray-500 dark:text-gray-400 text-sm">
+                    @mealmatebot
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="whitespace-pre-line font-semi-bold font-md">
+                {feed.ai_feedback}
+              </div>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <LikeComponent
@@ -191,69 +229,19 @@ export function FeedViewComponent({ id }) {
               <span>{feed.commentNum}</span>
             </Button>
           </div>
-          <CommentComponent commentList={commentList} feedId={feed.id} />
+          <CommentComponent
+            commentList={commentList}
+            feedId={feed.id}
+            setFeed={setFeed}
+          />
+          {deleteOpen ? (
+            <FeedDeleteComponent id={feed.id} setDeleteOpen={setDeleteOpen} />
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>
-  );
-}
-
-function BookmarkIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-    </svg>
-  );
-}
-
-function FileWarningIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-      <path d="M12 9v4" />
-      <path d="M12 17h.01" />
-    </svg>
-  );
-}
-
-function HeartIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
   );
 }
 
