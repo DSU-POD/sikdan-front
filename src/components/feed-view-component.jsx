@@ -1,9 +1,8 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { api } from "@/modules/api.module";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import LikeComponent from "./like-component";
 import CommentComponent from "./comment";
@@ -195,16 +194,22 @@ export function FeedViewComponent({ id }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <div className="flex flex-row align-center gap-2 font-medium">
+                  <div className="flex flex-row items-center gap-2 font-medium">
                     밀메이트 AI 피드백 봇
                   </div>
                   <div className="text-gray-500 dark:text-gray-400 text-sm">
-                    @mealmatebot
+                    <span>@mealmatebot</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="space-y-2">
+
+            <div className="flex flex-col gap-2 space-y-2">
+              <span className="flex align-center flex-row gap-1 text-xs">
+                <InfoCircledIcon />
+                회원님의 나이대, 목표와 올려주신 식단을 통해 AI가 식단에 대해
+                피드백을 해드립니다.
+              </span>
               <div className="whitespace-pre-line font-semi-bold font-md">
                 {feed.ai_feedback}
               </div>
