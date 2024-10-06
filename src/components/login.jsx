@@ -34,6 +34,7 @@ export function LoginComponent() {
   const [error, setError] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
+  const isError = true;
   const handleLogin = async (event) => {
     event.preventDefault();
     setError("");
@@ -44,7 +45,6 @@ export function LoginComponent() {
         password,
       });
       if (response?.result === "success") {
-        showToast("로그인 성공");
         const token = response.data;
         localStorage.setItem("token", token);
         dispatch(
@@ -56,7 +56,6 @@ export function LoginComponent() {
         router.push("/main/feed");
       }
     } catch (err) {
-      const isError = true;
       showToast("로그인에 실패했습니다. 다시 시도해주세요.", isError);
     }
   };

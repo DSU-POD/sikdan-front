@@ -1,11 +1,13 @@
 import { showToast } from "@/components/layout/toast";
 import axios from "axios";
+import Router from "next/router";
 
 export const api = axios.create({
   baseURL: `/api/`,
   validateStatus: (status) => {
     if (status === 401) {
       showToast("다시 로그인 후 시도해주세요.", true);
+      return false;
     }
 
     return status >= 200 && status < 300;
@@ -25,7 +27,9 @@ api.interceptors.request.use((request) => {
   if (!exceptPath.includes(request.url)) {
     const token = localStorage.getItem("token");
     if (!token) {
-      return Promise.reject(401);
+      showToast("다시 로그인 해주세요.", true);
+      Router.push(`/member/logout`);
+      return false;
     }
 
     request.headers.Authorization = `Bearer ${token}`;
