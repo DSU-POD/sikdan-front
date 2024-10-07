@@ -67,23 +67,17 @@ export function LoginComponent() {
   };
 
   return (
-    <div>
+    <div className="bg-[#73A556]">
       <div className="flex flex-col items-center mb-8">
         <img
-          src="/tmp_logo.png"
+          src="/new_logo.png"
           alt="MealMate Logo"
           wuserIdth={60}
           height={60}
           className="mb-2"
         />
-        <h1 className="text-2xl font-bold text-Black-800 dark:text-white-200">
-          MealMate
-        </h1>
-        <p className="text-sm text-Black-600 dark:text-white-400">
-          당신을 위한 AI 식단 메이트
-        </p>
       </div>
-      <div className="w-full max-w-md p-6 bg-stone-100 rounded-lg shadow-md dark:bg-gray-800">
+      <div className="w-full max-w-md p-6 text-black bg-white shadow-md rounded-lg dark:bg-gray-800">
         <form onSubmit={handleLogin}>
           <div className="space-y-4">
             <div>
@@ -92,6 +86,7 @@ export function LoginComponent() {
                 userId="userId"
                 type="userId"
                 value={userId}
+                className="shadow-md text-black"
                 onChange={(e) => setUserId(e.target.value)}
                 placeholder="아이디를 입력하세요"
                 required
@@ -103,6 +98,7 @@ export function LoginComponent() {
                 userId="password"
                 type="password"
                 value={password}
+                className="shadow-md text-black"
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
                 required
@@ -112,19 +108,23 @@ export function LoginComponent() {
           {error && <p style={{ color: "red" }}>{error}</p>}
           <Button
             type="submit"
-            className="w-full mt-4 border border-black"
+            className="w-full bg-white mt-4 text-black shadow-md"
             onClick={handleLogin}
           >
             로그인
           </Button>
         </form>
-        <div className="flex justify-between mt-4 text-sm text-gray-600 dark:text-gray-400">
-          <Link href="#" className="hover:underline" prefetch={false}>
+        <div className="flex justify-between mt-4 text-sm dark:text-gray-400">
+          <Link
+            href="#"
+            className="hover:underline text-black"
+            prefetch={false}
+          >
             아이디/비밀번호 찾기
           </Link>
           <Link
             href="#"
-            className="hover:underline"
+            className="hover:underline text-black"
             prefetch={false}
             onClick={handleRegister}
           >
