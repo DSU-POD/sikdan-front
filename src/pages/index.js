@@ -12,6 +12,7 @@ export const getServerSideProps = async () => {
   return {
     props: {
       isBeforeLogin: true,
+      isLoginPage: true,
     },
   };
 };
