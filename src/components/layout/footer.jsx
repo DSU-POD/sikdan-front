@@ -25,7 +25,7 @@ export default function FooterComponent({ isBeforeLogin }) {
             <UserIcon className="w-6 h-6" />
           </Link>
           <Link
-            href="/member/mypage/component"
+            href="/member/mypage/edit"
             className="flex px-4 flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
             prefetch={false}
           >
