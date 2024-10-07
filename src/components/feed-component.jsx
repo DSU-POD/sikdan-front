@@ -40,7 +40,7 @@ export function FeedComponent({ page: pageNum, type }) {
         setTotalCount(result.data.totalCount);
       }
     });
-  }, [page]);
+  }, [page, type]);
 
   const getFeedList = async () => {
     try {

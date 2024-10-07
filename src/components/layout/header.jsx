@@ -18,7 +18,7 @@ export default function Header() {
     <header className="w-full bg-[#F0F0F0] dark:bg-gray-950 dark:border-gray-800 px-6 py-6 flex justify-between gap-4 items-center">
       <div className="flex flex-row gap-4">
         <Link
-          href="/main/feed/"
+          href="/main/feed/?type=people"
           className="flex items-center justify-between gap-2"
           prefetch={false}
         >
@@ -26,7 +26,7 @@ export default function Header() {
         </Link>
 
         <Link
-          href="/main/feed/"
+          href="/main/feed/?type=expert"
           className="flex items-center justify-between gap-2"
           prefetch={false}
         >
