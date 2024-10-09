@@ -9,7 +9,7 @@ import { api } from "@/modules/api.module";
 import { showToast } from "./layout/toast";
 
 export default function ProfileEditComponent() {
-  const [info, setInfo] = useState({}); // 회원 정보 상태
+  const [info, setInfo] = useState({ nickname: "", email: "", userId: "" }); // 회원 정보 상태에 userId 추가
   const [allergy, setAllergy] = useState(false); // 알레르기 상태
   const [goal, setGoal] = useState(""); // 최신 목표를 반영하기 위해 빈 문자열로 초기화
   const [selectedAllergies, setSelectedAllergies] = useState([]); // 선택된 알레르기
@@ -32,10 +32,10 @@ export default function ProfileEditComponent() {
     try {
       const response = await api.get("/member/info"); // GET 요청으로 회원 정보 불러오기
       if (response?.result === "success") {
-        const { age, height, weight, goal, allergy } = response.data;
+        const { age, height, weight, goal, allergy, nickname, email, userId } = response.data;
 
         // API로 받은 정보 설정
-        setInfo({ age, height, weight });
+        setInfo({ age, height, weight, nickname, email, userId });
         setGoal(goal); // 서버로부터 목표를 받아 상태에 저장
 
         // 불러온 알레르기 데이터를 ','로 구분된 문자열에서 배열로 변환하여 상태에 설정
@@ -57,6 +57,9 @@ export default function ProfileEditComponent() {
     if (goalFromQuery) {
       setGoal(goalFromQuery); // 쿼리 파라미터에서 가져온 목표로 상태 업데이트
     }
+
+    // 디버깅용 데이터 확인
+    console.log(info);
   }, [router.query]);
 
   // 회원 정보 수정 요청 함수 (PATCH 요청)
@@ -129,21 +132,17 @@ export default function ProfileEditComponent() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white dark:bg-gray-950 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-6">
-        <div className="relative">
-          <Avatar
-            className="w-16 h-16 border-2 border-gray-300 cursor-pointer"
-            onClick={() => setShowPasswordPopup(!showPasswordPopup)}
-          >
-            <AvatarFallback>{info.nickname?.substring(0, 2)}</AvatarFallback>
-          </Avatar>
+    <div className="max-w-xl w-full mx-auto p-6 bg-white dark:bg-gray-950 rounded-lg shadow-md">
+      <div className="flex items-center mb-6">
+        <Avatar className="w-16 h-16 border-2 border-gray-300">
+          <AvatarFallback>{info.nickname ? info.nickname.substring(0, 2) : "?"}</AvatarFallback>
+        </Avatar>
+        <div className="ml-4">
+          <h2 className="text-xl font-bold">{info.nickname || "닉네임 없음"}</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{info.userId || "아이디 없음"}</p>{" "}
+          {/* 사용자 아이디 표시 */}
         </div>
-        <div className="flex flex-col justify-center ml-4">
-          <h2 className="text-xl font-bold">{info.nickname}</h2>
-          <p className="text-gray-600 dark:text-gray-400">{info.email}</p>
-        </div>
-        <Button variant="outline" size="sm" className="self-start" onClick={handleLogout}>
+        <Button variant="outline" className="ml-auto" onClick={handleLogout}>
           로그아웃
         </Button>
       </div>
@@ -157,7 +156,7 @@ export default function ProfileEditComponent() {
           <Input
             id="email"
             type="email"
-            value={info.email}
+            value={info.email || "이메일을 불러오는 중..."}
             className="mt-1 block w-full bg-gray-300"
             readOnly
             disabled
@@ -165,9 +164,8 @@ export default function ProfileEditComponent() {
         </div>
         <div className="flex justify-start">
           <Button
-            variant="solid"
-            size="md"
-            className="bg-blue-600 text-white"
+            variant="outline"
+            className="bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
             onClick={() => setShowPasswordPopup(!showPasswordPopup)}
           >
             비밀번호 변경
@@ -185,7 +183,7 @@ export default function ProfileEditComponent() {
             placeholder="키를 입력하세요."
             className="mt-1 block w-full"
             onChange={(e) => setInfo({ ...info, height: e.target.value })}
-            value={info.height}
+            value={info.height || ""}
           />
         </div>
         <div>
@@ -198,7 +196,7 @@ export default function ProfileEditComponent() {
             placeholder="몸무게를 입력하세요."
             className="mt-1 block w-full"
             onChange={(e) => setInfo({ ...info, weight: e.target.value })}
-            value={info.weight}
+            value={info.weight || ""}
           />
         </div>
 
@@ -296,10 +294,18 @@ export default function ProfileEditComponent() {
       <Separator className="my-6" />
 
       <div className="flex justify-between mt-6">
-        <Button variant="solid" size="md" className="bg-blue-600 text-white" onClick={handleEditInfo}>
+        <Button
+          variant="outline"
+          className="bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+          onClick={handleEditInfo}
+        >
           수정
         </Button>
-        <Button variant="solid" size="md" className="bg-green-600 text-white" onClick={handleGoalSetting}>
+        <Button
+          variant="outline"
+          className="bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+          onClick={handleGoalSetting}
+        >
           목표 설정
         </Button>
       </div>

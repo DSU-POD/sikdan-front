@@ -7,11 +7,3 @@ export default function ProfilePage() {
     </>
   );
 }
-
-export const getServerSideProps = async () => {
-  return {
-    props: {
-      isBeforeLogin: true,
-    },
-  };
-};

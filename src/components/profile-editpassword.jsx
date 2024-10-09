@@ -5,13 +5,32 @@ import { useSelector } from "react-redux";
 const EditPasswordComponent = ({ handlePasswordPopup }) => {
   const { userId } = useSelector((state) => state.memberReducer.loginData || {});
   const [newPassword, setNewpassword] = useState("");
-  const handleEditPassword = async () => {
-    const response = await api.patch("/member/editPassword", {
-      newPassword,
-    });
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-    console.log(response);
+  const handleEditPassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      const response = await api.patch("/member/editPassword", {
+        newPassword,
+      });
+
+      if (response?.result === "success") {
+        // 비밀번호가 성공적으로 변경되면 모달을 닫음
+        handlePasswordPopup();
+      } else {
+        setError("비밀번호 변경에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("비밀번호 변경 중 오류 발생:", error);
+      setError("비밀번호 변경 중 오류가 발생했습니다.");
+    }
   };
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -42,7 +61,9 @@ const EditPasswordComponent = ({ handlePasswordPopup }) => {
                     type="password"
                     className="mt-2 border border-gray-300 p-2 w-full"
                     placeholder="비밀번호 확인"
+                    onChange={(e) => setConfirmPassword(e.currentTarget.value)}
                   />
+                  {error && <p className="mt-2 text-red-500">{error}</p>}
                 </div>
               </div>
             </div>
