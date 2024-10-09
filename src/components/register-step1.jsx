@@ -165,6 +165,12 @@ export default function RegisterStep1Component() {
 
   return (
     <>
+      <button
+        onClick={() => router.push("/")} // 뒤로 가기 기능
+        className="absolute top-4 left-4 p-2 rounded-full hover:bg-gray-300"
+      >
+        <ArrowLeftIcon className="w-5 h-5" />
+      </button>
       <div className="w-full space-y-6">
         <div className="text-center" />
         <div className="space-y-4">
@@ -291,5 +297,25 @@ export default function RegisterStep1Component() {
         </Button>
       </div>
     </>
+  );
+}
+
+function ArrowLeftIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m12 19-7-7 7-7" />
+      <path d="M19 12H5" />
+    </svg>
   );
 }
