@@ -9,14 +9,13 @@ import { api } from "@/modules/api.module";
 import { showToast } from "./layout/toast";
 
 export default function ProfileEditComponent() {
-  const [info, setInfo] = useState({ nickname: "", email: "", userId: "" }); // 회원 정보 상태에 userId 추가
+  const [info, setInfo] = useState({ nickname: "", email: "", userId: "", gender: "", age: "" }); // 회원 정보 상태에 gender, age 추가
   const [allergy, setAllergy] = useState(false); // 알레르기 상태
   const [goal, setGoal] = useState(""); // 최신 목표를 반영하기 위해 빈 문자열로 초기화
   const [selectedAllergies, setSelectedAllergies] = useState([]); // 선택된 알레르기
   const [showPasswordPopup, setShowPasswordPopup] = useState(false); // 비밀번호 변경 팝업
   const router = useRouter();
 
-  // 목표 값과 문자열을 한글로 변환하는 객체
   const goalTranslations = {
     weightdecrease: "체중 감소",
     weightkeep: "체중 유지",
@@ -27,21 +26,17 @@ export default function ProfileEditComponent() {
 
   const isError = true;
 
-  // 회원 정보를 불러오는 함수 (GET 요청)
   const getInfo = async () => {
     try {
-      const response = await api.get("/member/info"); // GET 요청으로 회원 정보 불러오기
+      const response = await api.get("/member/info");
       if (response?.result === "success") {
-        const { age, height, weight, goal, allergy, nickname, email, userId } = response.data;
+        const { age, height, weight, goal, allergy, nickname, email, userId, gender } = response.data;
+        setInfo({ age, height, weight, nickname, email, userId, gender });
+        setGoal(goal);
 
-        // API로 받은 정보 설정
-        setInfo({ age, height, weight, nickname, email, userId });
-        setGoal(goal); // 서버로부터 목표를 받아 상태에 저장
-
-        // 불러온 알레르기 데이터를 ','로 구분된 문자열에서 배열로 변환하여 상태에 설정
         const tmpAllergy = allergy ? allergy.split(",") : [];
         setSelectedAllergies(tmpAllergy);
-        setAllergy(tmpAllergy.length > 0); // 알레르기 여부 상태 설정
+        setAllergy(tmpAllergy.length > 0);
       }
     } catch (error) {
       console.error("회원 정보를 불러오는 중 오류 발생:", error);
@@ -50,19 +45,16 @@ export default function ProfileEditComponent() {
   };
 
   useEffect(() => {
-    getInfo(); // 컴포넌트 마운트 시 회원 정보 불러오기
+    getInfo();
 
-    // 목표 페이지에서 수정한 경우, 쿼리 파라미터에서 목표 가져오기
     const { goal: goalFromQuery } = router.query;
     if (goalFromQuery) {
-      setGoal(goalFromQuery); // 쿼리 파라미터에서 가져온 목표로 상태 업데이트
+      setGoal(goalFromQuery);
     }
 
-    // 디버깅용 데이터 확인
     console.log(info);
   }, [router.query]);
 
-  // 회원 정보 수정 요청 함수 (PATCH 요청)
   const handleEditInfo = async () => {
     if (!info.height) {
       showToast("키를 입력해주세요.", isError);
@@ -74,19 +66,17 @@ export default function ProfileEditComponent() {
       return false;
     }
 
-    // 선택된 알레르기 배열을 ','로 구분된 문자열로 변환하여 서버에 전송
     const allergyString = selectedAllergies.length > 0 ? selectedAllergies : [];
 
-    const { age, height, weight } = info;
+    const { age, height, weight, gender } = info;
     try {
       const response = await api.patch("/member/edit", {
-        editData: { age, height, weight, allergy: allergyString, goal }, // 수정할 정보와 목표, 알레르기 정보 전송
+        editData: { age, height, weight, gender, allergy: allergyString, goal },
       });
 
       if (response?.result === "success") {
         showToast("회원 정보가 수정되었습니다.", false);
-        // 수정 후 정보 다시 불러오기
-        await getInfo(); // 저장된 후 정보 불러오기
+        await getInfo();
       } else {
         showToast("회원 정보 수정에 실패했습니다.", isError);
       }
@@ -96,44 +86,39 @@ export default function ProfileEditComponent() {
     }
   };
 
-  // 토큰 기반 로그아웃 함수
   const handleLogout = () => {
-    // 로컬 스토리지에서 인증 토큰 삭제
     localStorage.removeItem("authToken");
-
-    // 성공 메시지 출력
     showToast("로그아웃 되었습니다.", false);
-
-    // 로그인 페이지로 리다이렉트
     router.push("/");
   };
 
-  // 알레르기 선택 핸들러
   const handleAllergySelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
-      setSelectedAllergies((prev) => [...prev, value]); // 체크되면 알레르기 추가
+      setSelectedAllergies((prev) => [...prev, value]);
     } else {
-      setSelectedAllergies((prev) => prev.filter((allergy) => allergy !== value)); // 체크 해제 시 알레르기 제거
+      setSelectedAllergies((prev) => prev.filter((allergy) => allergy !== value));
     }
   };
 
-  // 알레르기 유무 라디오 버튼 핸들러
   const handleAllergyRadioChange = (hasAllergy) => {
     setAllergy(hasAllergy);
     if (!hasAllergy) {
-      setSelectedAllergies([]); // '없음' 선택 시 모든 알레르기 초기화
+      setSelectedAllergies([]);
     }
   };
 
-  // 목표 설정 페이지로 이동
   const handleGoalSetting = () => {
-    router.push("/member/profile/goal"); // 목표 설정 페이지로 이동
+    router.push("/member/profile/goal");
   };
 
-  // 이전 페이지로 이동
   const handleExit = () => {
-    router.back(); // 이전 페이지로 돌아가기
+    router.back();
+  };
+
+  // 나이 입력 필드 핸들러
+  const handleAgeChange = (e) => {
+    setInfo({ ...info, age: e.target.value });
   };
 
   return (
@@ -144,8 +129,7 @@ export default function ProfileEditComponent() {
         </Avatar>
         <div className="ml-4">
           <h2 className="text-xl font-bold">{info.nickname || "닉네임 없음"}</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{info.userId || "아이디 없음"}</p>{" "}
-          {/* 사용자 아이디 표시 */}
+          <p className="text-sm text-gray-600 dark:text-gray-400">{info.userId || "아이디 없음"}</p>
         </div>
         <Button variant="outline" className="ml-auto" onClick={handleLogout}>
           로그아웃
@@ -178,6 +162,30 @@ export default function ProfileEditComponent() {
         </div>
 
         {showPasswordPopup && <EditPasswordComponent handlePasswordPopup={() => setShowPasswordPopup(false)} />}
+
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">성별</label>
+          <p className="mt-1 text-gray-700 dark:text-gray-300">
+            {info.gender === "man" ? "남성" : info.gender === "woman" ? "여성" : "선택되지 않음"}
+          </p>
+        </div>
+
+        {/* 나이 입력 필드 */}
+        <div className="mt-4">
+          <label htmlFor="age" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            나이
+          </label>
+          <Input
+            id="age"
+            type="number"
+            placeholder="나이를 입력하세요."
+            className="mt-1 block w-full"
+            onChange={handleAgeChange}
+            value={info.age || ""}
+          />
+        </div>
+
+        {/* 키, 몸무게 입력 필드 */}
         <div>
           <label htmlFor="height" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             키(cm)
@@ -271,7 +279,6 @@ export default function ProfileEditComponent() {
                 ))}
               </div>
 
-              {/* 선택된 알레르기 목록 표시 */}
               <div className="mt-4">
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">선택된 알레르기:</h4>
                 <div className="flex flex-wrap mt-2">
@@ -289,7 +296,6 @@ export default function ProfileEditComponent() {
           )}
         </div>
 
-        {/* 현재 목표를 알레르기 하단에 위치 */}
         <div className="mt-6">
           <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">현재 목표</h3>
           <p className="text-gray-600 dark:text-gray-400">{goalTranslations[goal] || "목표 없음"}</p>
