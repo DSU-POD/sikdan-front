@@ -8,7 +8,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import CommentSection from "@/components/CommentSection";
 import { useSelector } from "react-redux";
 import { api } from "@/modules/api.module";
 import { showToast } from "./layout/toast";
@@ -89,15 +88,6 @@ export function FeedComponent({ page: pageNum, type }) {
     }
   };
 
-  // 댓글 버튼을 눌렀을 때 해당 피드 ID와 댓글 데이터를 설정 및 모달 열기
-  const handleCommentOpen = (feedId) => {
-    const selectedFeed = feedList.find((feed) => feed.id === feedId); // 피드 찾기
-    setSelectedFeedId(feedId); // 선택된 피드 ID 설정
-    setSelectedFeedComments(selectedFeed?.feedComment || []); // 해당 피드의 댓글 설정
-
-    setIsCommentOpen(true); // 댓글 모달 열기
-  };
-
   return (
     <div className="flex flex-col">
       <main className="flex-1 overflow-y-auto">
@@ -173,7 +163,7 @@ export function FeedComponent({ page: pageNum, type }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleCommentOpen(feed.id)} // feed별로 고유한 ID를 사용하여 댓글 열기
+                    onClick={() => router.push(`/main/feed/${feed.id}/`)} // feed별로 고유한 ID를 사용하여 댓글 열기
                   >
                     <MessageCircleIcon className="w-5 h-5" />
                     <span className="ml-1">{feed.commentNum}</span>
@@ -183,7 +173,7 @@ export function FeedComponent({ page: pageNum, type }) {
                 <div className="text-lg font-semibold">{feed.subject}</div>
                 <div
                   className="text-base text-gray-800 dark:text-gray-200"
-                  onClick={() => router.push(`/main/feed/${feed.id}/`)}
+                  onClick={() => router.push(`/main/feed/${feed.content}/`)}
                 >
                   {feed.contents}
                 </div>
@@ -202,16 +192,6 @@ export function FeedComponent({ page: pageNum, type }) {
           }}
         />
       </main>
-      {/* 선택된 피드의 댓글을 CommentSection에 전달 */}
-      {isCommentOpen ? (
-        <CommentSection
-          isOpen={isCommentOpen}
-          onClose={() => setIsCommentOpen(false)}
-          comments={selectedFeedComments} // 선택된 피드의 댓글 전달
-        />
-      ) : (
-        ""
-      )}
     </div>
   );
 }
