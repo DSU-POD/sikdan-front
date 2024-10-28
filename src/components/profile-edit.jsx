@@ -116,11 +116,6 @@ export default function ProfileEditComponent() {
     router.back();
   };
 
-  // 성별 라디오 버튼 핸들러
-  const handleGenderChange = (e) => {
-    setInfo({ ...info, gender: e.target.value });
-  };
-
   // 나이 입력 필드 핸들러
   const handleAgeChange = (e) => {
     setInfo({ ...info, age: e.target.value });
