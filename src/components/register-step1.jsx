@@ -265,29 +265,6 @@ export default function RegisterStep1Component() {
               </Button>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="choose-expert">전문가</Label>
-            <div className="flex justify-between gap-2">
-              <Button
-                variant="outline"
-                className={`w-1/2 ${
-                  trainer_yn === "expert" ? "bg-black text-white" : "bg-white"
-                }`}
-                onClick={() => handleTrainer_yn("expert")}
-              >
-                전문가
-              </Button>
-              <Button
-                variant="outline"
-                className={`w-1/2 ${
-                  trainer_yn === "people" ? "bg-black text-white" : "bg-white"
-                }`}
-                onClick={() => handleTrainer_yn("people")}
-              >
-                일반인
-              </Button>
-            </div>
-          </div>
         </div>
         <Button
           type="submit"

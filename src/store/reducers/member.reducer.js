@@ -6,7 +6,6 @@ const initialState = {
     password: "",
     nickname: "",
     email: "",
-    trainer_yn: "",
   },
   registerStep2: {
     gender: "",
@@ -15,6 +14,8 @@ const initialState = {
   registerStep3: {
     height: 0,
     weight: 0,
+    workOut: 0,
+    trainerYn: "",
   },
   registerStep4: {
     goal: "",
@@ -22,6 +23,11 @@ const initialState = {
   loginData: {
     isLogin: false,
     userId: "",
+    nickname: "",
+    type: "",
+  },
+  socialLoginData: {
+    naver_id: "",
   },
 };
 const memberReducer = createSlice({
@@ -33,15 +39,17 @@ const memberReducer = createSlice({
       state.registerStep1.password = action.payload.password;
       state.registerStep1.nickname = action.payload.nickname;
       state.registerStep1.email = action.payload.email;
-      state.registerStep1.trainer_yn = action.payload.trainer_yn;
     },
     setRegisterStep2Data: (state, action) => {
       state.registerStep2.gender = action.payload.gender;
       state.registerStep2.age = action.payload.age;
     },
     setRegisterStep3Data: (state, action) => {
+      console.log(action.payload);
       state.registerStep3.height = action.payload.height;
       state.registerStep3.weight = action.payload.weight;
+      state.registerStep3.workOut = action.payload.workOut;
+      state.registerStep3.trainerYn = action.payload.trainerYn;
     },
     setRegisterStep4Data: (state, action) => {
       state.registerStep4.goal = action.payload.goal;
@@ -49,6 +57,11 @@ const memberReducer = createSlice({
     setLoginData: (state, action) => {
       state.loginData.isLogin = action.payload.isLogin;
       state.loginData.userId = action.payload.userId;
+      state.loginData.nickname = action.payload.nickname;
+      state.loginData.type = action.payload.type;
+    },
+    setSocialLoginData: (state, action) => {
+      state.socialLoginData.naver_id = action.payload.naver_id;
     },
     resetAllState: () => initialState,
   },
@@ -60,6 +73,7 @@ export const {
   setRegisterStep3Data,
   setRegisterStep4Data,
   setLoginData,
+  setSocialLoginData,
   resetAllState,
 } = memberReducer.actions;
 export default memberReducer.reducer;

@@ -28,7 +28,10 @@ import { CardTitle, Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { setRegisterStep4Data } from "@/store/reducers/member.reducer";
+import {
+  resetAllState,
+  setRegisterStep4Data,
+} from "@/store/reducers/member.reducer";
 import { useRouter } from "next/router";
 import { showToast } from "./layout/toast";
 import { api } from "@/modules/api.module";
@@ -51,7 +54,9 @@ export default function RegisterStep4Component() {
   const registerStep3 = useSelector(
     (state) => state.memberReducer.registerStep3
   );
-
+  const socialLoginData = useSelector(
+    (state) => state.memberReducer.socialLoginData
+  );
   useEffect(() => {
     const { goal } = data.registerStep4;
     setGoal(goal);
@@ -81,9 +86,10 @@ export default function RegisterStep4Component() {
       })
     );
 
-    const { userId, password, nickname, email, trainer_yn } = registerStep1;
+    const { userId, password, nickname, email } = registerStep1;
     const { gender, age } = registerStep2;
-    const { height, weight } = registerStep3;
+    const { height, weight, workOut, trainerYn } = registerStep3;
+    const { naver_id } = socialLoginData;
 
     const registrationData = {
       registerData: {
@@ -91,12 +97,14 @@ export default function RegisterStep4Component() {
         password,
         nickname,
         email,
-        trainer_yn,
+        trainerYn,
         gender,
         age,
         height,
         weight,
         goal,
+        naver_id,
+        workOut,
       },
     };
 
@@ -107,6 +115,7 @@ export default function RegisterStep4Component() {
 
     if (response.result === "success") {
       showToast("회원가입이 성공하였습니다.");
+      resetAllState();
       router.push("/");
     } else {
       showToast("회원가입에 실패했습니다. 다시 시도해주세요.", isError);
@@ -178,6 +187,19 @@ export default function RegisterStep4Component() {
             >
               건강 유지
             </Button>
+
+            <Button
+              variant="outline"
+              className={`w-full shadow ${
+                goal === "increasemuscles" ? "bg-black text-white" : "bg-white"
+              }`}
+              onClick={(e) => {
+                handleGoal("increasemuscles");
+              }}
+              style={{ height: "3.5rem" }}
+            >
+              근력 증가
+            </Button>
             <Button
               variant="outline"
               className={`w-full shadow ${
@@ -193,12 +215,12 @@ export default function RegisterStep4Component() {
           </div>
         </CardContent>
       </Card>
-      <div className="mt-auto border-0 w-full">
+      <div className="mt-auto border-0 w-full ">
         <Card className="w-full border-0 shadow-none">
           <CardFooter className="flex justify-between gap-2">
             <Button
               variant="outline"
-              className="w-full border shadow"
+              className="w-full border shadow bg-white"
               onClick={handleSubmit2}
             >
               이전

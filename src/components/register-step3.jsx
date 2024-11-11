@@ -25,6 +25,14 @@ To read more about using these font, please visit the Next.js documentation:
 **/
 import { Progress } from "@/components/ui/progress";
 import { CardTitle, Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,16 +46,30 @@ import ArrowLeftIcon from "./icon/arrowlefticon";
 export default function RegisterStep3Component() {
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
-  const [showempty, setShowempty] = useState(false);
+  const [workOut, setWorkOut] = useState(1);
+  const [trainerYn, setTrainerYn] = useState("people");
+
   const dispatch = useDispatch();
   const data = useSelector((state) => state.memberReducer);
   const router = useRouter();
   const isError = true;
-  useEffect(() => {
-    const { height, weight } = data.registerStep3;
 
+  const activityLevels = [
+    { value: 1, label: "운동 안함" },
+    { value: 2, label: "가벼운 운동" },
+    { value: 3, label: "일주일에 3~5일 운동" },
+    {
+      value: 4,
+      label: "일주일에 6~7일 운동",
+    },
+    { value: 5, label: "고강도 훈련" },
+  ];
+  useEffect(() => {
+    const { height, weight, workOut, trainerYn } = data.registerStep3;
     setHeight(height);
     setWeight(weight);
+    setWorkOut(workOut);
+    setTrainerYn(trainerYn);
   }, [data]);
 
   const handleHeight = (e) => {
@@ -75,6 +97,8 @@ export default function RegisterStep3Component() {
       setRegisterStep3Data({
         height,
         weight,
+        workOut,
+        trainerYn,
       })
     );
     router.push("/member/register/step4"); // Navigate to /member/register/step4
@@ -105,13 +129,14 @@ export default function RegisterStep3Component() {
                   min="0"
                   max="400"
                   placeholder="키를 입력해주세요."
-                  className="shadow h-20 text-lg"
+                  className="shadow h-15 text-lg"
                   onChange={(e) => handleHeight(e)}
                   required
                 />
                 <span className="text-gray-500">cm</span>
               </div>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="weight">몸무게</Label>
               <div className="flex items-center gap-2">
@@ -123,11 +148,58 @@ export default function RegisterStep3Component() {
                   value={weight}
                   placeholder="몸무게를 입력해주세요."
                   onChange={(e) => handleWeight(e)}
-                  className="shadow h-20 text-lg"
+                  className="shadow h-15 text-lg"
                   required
                 />
                 <span className="text-gray-500">kg</span>
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="choose-expert">전문가</Label>
+              <div className="flex justify-between gap-2">
+                <Button
+                  variant="outline"
+                  className={`w-1/2 ${
+                    trainerYn === "expert" ? "bg-black text-white" : "bg-white"
+                  }`}
+                  onClick={() => setTrainerYn("expert")}
+                >
+                  전문가
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`w-1/2 ${
+                    trainerYn === "people" ? "bg-black text-white" : "bg-white"
+                  }`}
+                  onClick={() => setTrainerYn("people")}
+                >
+                  일반인
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="weight">운동량</Label>
+              <Select
+                className="bg-white"
+                onValueChange={setWorkOut}
+                value={workOut}
+              >
+                <SelectTrigger className="w-full bg-white">
+                  <SelectValue placeholder="활동량을 선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  {activityLevels.map((level) => (
+                    <SelectItem
+                      className="bg-white"
+                      key={level.value}
+                      value={level.value}
+                      selected={workOut === level.value ? true : ""}
+                    >
+                      {level.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
