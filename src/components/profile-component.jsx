@@ -80,7 +80,7 @@ export default function ProfileComponent() {
             <div className="flex-1 grid gap-1 md:gap-2">
               <div className="flex items-center gap-2 md:gap-3">
                 <h2 className="text-base font-bold md:text-lg">{userInfo.nickname || "닉네임 없음"}</h2>
-                {userInfo.trainer_yn === "expert" ? <ExpertBadgeComponent /> : ""}
+                {userInfo.trainerYn === "expert" ? <ExpertBadgeComponent /> : ""}
                 {userInfo.verified && (
                   <div className="ml-auto flex items-center gap-2">
                     <div className="bg-blue-500 rounded-full px-2 py-1 text-white text-xs font-medium flex items-center gap-1 md:px-3 md:py-1.5 md:text-sm">
