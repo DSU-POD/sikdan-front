@@ -115,14 +115,7 @@ export default function RegisterStep1Component() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (
-      !userId ||
-      !password ||
-      !confirmpassword ||
-      !nickname ||
-      !email ||
-      !trainer_yn
-    ) {
+    if (!userId || !password || !confirmpassword || !nickname || !email || !trainer_yn) {
       showToast("모든 항목을 입력해주세요.", isError);
       return;
     }
@@ -256,11 +249,7 @@ export default function RegisterStep1Component() {
                 ref={(el) => (duplicateRef.current.email = el)}
                 required
               />
-              <Button
-                className="bg-white shadow-md"
-                variant="outline"
-                onClick={() => handleDuplicate("email", email)}
-              >
+              <Button className="bg-white shadow-md" variant="outline" onClick={() => handleDuplicate("email", email)}>
                 중복검사
               </Button>
             </div>
@@ -270,18 +259,14 @@ export default function RegisterStep1Component() {
             <div className="flex justify-between gap-2">
               <Button
                 variant="outline"
-                className={`w-1/2 ${
-                  trainer_yn === "expert" ? "bg-black text-white" : "bg-white"
-                }`}
+                className={`w-1/2 ${trainer_yn === "expert" ? "bg-black text-white" : "bg-white"}`}
                 onClick={() => handleTrainer_yn("expert")}
               >
                 전문가
               </Button>
               <Button
                 variant="outline"
-                className={`w-1/2 ${
-                  trainer_yn === "people" ? "bg-black text-white" : "bg-white"
-                }`}
+                className={`w-1/2 ${trainer_yn === "people" ? "bg-black text-white" : "bg-white"}`}
                 onClick={() => handleTrainer_yn("people")}
               >
                 일반인
@@ -289,11 +274,7 @@ export default function RegisterStep1Component() {
             </div>
           </div>
         </div>
-        <Button
-          type="submit"
-          className="w-full bg-black text-white shadow"
-          onClick={handleSubmit}
-        >
+        <Button type="submit" className="w-full bg-black text-white shadow" onClick={handleSubmit}>
           다음
         </Button>
       </div>

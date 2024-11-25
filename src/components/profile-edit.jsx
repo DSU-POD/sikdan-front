@@ -9,11 +9,11 @@ import { api } from "@/modules/api.module";
 import { showToast } from "./layout/toast";
 
 export default function ProfileEditComponent() {
-  const [info, setInfo] = useState({ nickname: "", email: "", userId: "", gender: "", age: "" }); // 회원 정보 상태에 gender, age 추가
-  const [allergy, setAllergy] = useState(false); // 알레르기 상태
-  const [goal, setGoal] = useState(""); // 최신 목표를 반영하기 위해 빈 문자열로 초기화
-  const [selectedAllergies, setSelectedAllergies] = useState([]); // 선택된 알레르기
-  const [showPasswordPopup, setShowPasswordPopup] = useState(false); // 비밀번호 변경 팝업
+  const [info, setInfo] = useState({ nickname: "", email: "", userId: "", gender: "", age: "" });
+  const [allergy, setAllergy] = useState(false);
+  const [goal, setGoal] = useState("");
+  const [selectedAllergies, setSelectedAllergies] = useState([]);
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
   const router = useRouter();
 
   const goalTranslations = {
@@ -77,6 +77,7 @@ export default function ProfileEditComponent() {
       if (response?.result === "success") {
         showToast("회원 정보가 수정되었습니다.", false);
         await getInfo();
+        router.push("/main/feed"); // 수정 성공 시 피드 창으로 이동
       } else {
         showToast("회원 정보 수정에 실패했습니다.", isError);
       }
@@ -87,9 +88,9 @@ export default function ProfileEditComponent() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
     showToast("로그아웃 되었습니다.", false);
-    router.push("/");
+    router.push("/member/logout");
   };
 
   const handleAllergySelection = (e) => {
@@ -116,9 +117,11 @@ export default function ProfileEditComponent() {
     router.back();
   };
 
-  // 나이 입력 필드 핸들러
   const handleAgeChange = (e) => {
-    setInfo({ ...info, age: e.target.value });
+    setInfo((prevState) => ({
+      ...prevState,
+      age: e.target.value,
+    }));
   };
 
   return (
@@ -170,7 +173,6 @@ export default function ProfileEditComponent() {
           </p>
         </div>
 
-        {/* 나이 입력 필드 */}
         <div className="mt-4">
           <label htmlFor="age" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             나이
@@ -185,7 +187,6 @@ export default function ProfileEditComponent() {
           />
         </div>
 
-        {/* 키, 몸무게 입력 필드 */}
         <div>
           <label htmlFor="height" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             키(cm)
@@ -213,7 +214,6 @@ export default function ProfileEditComponent() {
           />
         </div>
 
-        {/* 알레르기 선택 영역 */}
         <div>
           <span className="block text-sm font-medium text-gray-700 dark:text-gray-300">알레르기 유무</span>
           <div className="flex items-center mt-2">

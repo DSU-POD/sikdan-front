@@ -42,15 +42,9 @@ export default function RegisterStep4Component() {
   const router = useRouter();
   const isError = true;
 
-  const registerStep1 = useSelector(
-    (state) => state.memberReducer.registerStep1
-  );
-  const registerStep2 = useSelector(
-    (state) => state.memberReducer.registerStep2
-  );
-  const registerStep3 = useSelector(
-    (state) => state.memberReducer.registerStep3
-  );
+  const registerStep1 = useSelector((state) => state.memberReducer.registerStep1);
+  const registerStep2 = useSelector((state) => state.memberReducer.registerStep2);
+  const registerStep3 = useSelector((state) => state.memberReducer.registerStep3);
 
   useEffect(() => {
     const { goal } = data.registerStep4;
@@ -100,10 +94,7 @@ export default function RegisterStep4Component() {
       },
     };
 
-    const response = await api.post(
-      "/member/register/complete",
-      registrationData
-    );
+    const response = await api.post("/member/register/complete", registrationData);
 
     if (response.result === "success") {
       showToast("회원가입이 성공하였습니다.");
@@ -123,18 +114,14 @@ export default function RegisterStep4Component() {
       </button>
       <Progress value={95} className="w-full mb-8" />
       <CardTitle className="mb-16">목표가 무엇인가요?</CardTitle>
-      <CardTitle className="mb-16 text-sm">
-        정확한 식단 추천 및 분석을 위해 목표 정보가 필요합니다.
-      </CardTitle>
+      <CardTitle className="mb-16 text-sm">정확한 식단 추천 및 분석을 위해 목표 정보가 필요합니다.</CardTitle>
 
       <Card className="w-full border-0">
         <CardContent className="grid gap-4">
           <div className="grid gap-6">
             <Button
               variant="outline"
-              className={`w-full shadow ${
-                goal === "weightdecrease" ? "bg-black text-white" : "bg-white"
-              }`}
+              className={`w-full shadow ${goal === "weightdecrease" ? "bg-black text-white" : "bg-white"}`}
               onClick={(e) => {
                 handleGoal("weightdecrease");
               }}
@@ -144,9 +131,7 @@ export default function RegisterStep4Component() {
             </Button>
             <Button
               variant="outline"
-              className={`w-full shadow ${
-                goal === "weightkeep" ? "bg-black text-white" : "bg-white"
-              }`}
+              className={`w-full shadow ${goal === "weightkeep" ? "bg-black text-white" : "bg-white"}`}
               onClick={(e) => {
                 handleGoal("weightkeep");
               }}
@@ -156,9 +141,7 @@ export default function RegisterStep4Component() {
             </Button>
             <Button
               variant="outline"
-              className={`w-full shadow ${
-                goal === "weightincrease" ? "bg-black text-white" : "bg-white"
-              }`}
+              className={`w-full shadow ${goal === "weightincrease" ? "bg-black text-white" : "bg-white"}`}
               onClick={(e) => {
                 handleGoal("weightincrease");
               }}
@@ -168,9 +151,7 @@ export default function RegisterStep4Component() {
             </Button>
             <Button
               variant="outline"
-              className={`w-full shadow ${
-                goal === "healthkeep" ? "bg-black text-white" : "bg-white"
-              }`}
+              className={`w-full shadow ${goal === "healthkeep" ? "bg-black text-white" : "bg-white"}`}
               onClick={(e) => {
                 handleGoal("healthkeep");
               }}
@@ -180,9 +161,7 @@ export default function RegisterStep4Component() {
             </Button>
             <Button
               variant="outline"
-              className={`w-full shadow ${
-                goal === "others" ? "bg-black text-white" : "bg-white"
-              }`}
+              className={`w-full shadow ${goal === "others" ? "bg-black text-white" : "bg-white"}`}
               onClick={(e) => {
                 handleGoal("others");
               }}
@@ -196,18 +175,10 @@ export default function RegisterStep4Component() {
       <div className="mt-auto border-0 w-full">
         <Card className="w-full border-0 shadow-none">
           <CardFooter className="flex justify-between gap-2">
-            <Button
-              variant="outline"
-              className="w-full border shadow"
-              onClick={handleSubmit2}
-            >
+            <Button variant="outline" className="w-full border shadow" onClick={handleSubmit2}>
               이전
             </Button>
-            <Button
-              type="submit"
-              className="w-full bg-black text-white shadow"
-              onClick={handleSubmit}
-            >
+            <Button type="submit" className="w-full bg-black text-white shadow" onClick={handleSubmit}>
               다음
             </Button>
           </CardFooter>
